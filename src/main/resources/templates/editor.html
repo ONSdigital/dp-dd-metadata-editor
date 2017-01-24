@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Metadata Editor</title>
+    <link rel="stylesheet" href="https://cdn.ons.gov.uk/sixteens/00c4260/css/main.css"></link>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        .error {
+            color: red;
+        }
+
+        .my-input {
+            width:100%;
+            max-width:100%;
+            font-size: 18px;
+        }
+
+        label {
+           font-size: 18px;
+        }
+
+        select {
+            font-size: 18px;
+        }
+
+        .field {
+            font-size: 18px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="header height--9 col-wrap">
+        <div class="col col--lg-one-third col--md-one-third">
+            <img href="/">
+            <img class="main-logo" src="https://www.ons.gov.uk/assets/img/ons-logo.svg"
+                 alt="Office for National Statistics"/>
+            </img>
+        </div>
+    </div>
+</div>
+<div class="background--astral">
+    <div class="wrapper">
+        <div class="col-wrap">
+            <div class="col">
+                <h1>dp-dd-metadataForm-editor</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="col-wrap">
+        <div class="col">
+            <form action="#" th:action="@{/metadata}" th:object="${metadataForm}" method="post">
+                <div class="field">
+                    <label for="dataset-select">DataSet ID:</label>
+                    <select th:field="*{datasetId}" id="dataset-select">
+                        <option value="" text=" - "/>
+                        <option th:each="id : ${dataSetList}"
+                                th:value="${id}"
+                                th:text="${id}">XXX
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="json-input" class="my-select">Metadata:</label>
+                    <textarea id="json-input" th:field="*{json}" rows="40" class="my-input"/>
+                    <span th:if="${#fields.hasErrors('*')}">
+                    <div th:each="err : ${#fields.errors('*')}" name="json" th:text="#{${err}}" class="error"></div>
+                </span>
+                </div>
+                <p><input type="submit" value="Submit"/></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
