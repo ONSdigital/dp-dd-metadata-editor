@@ -1,6 +1,6 @@
 package uk.co.onsdigital.discovery.dao;
 
-import uk.co.onsdigital.discovery.model.MetadataForm;
+import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +13,7 @@ public interface DatasetDAO {
 
     List<String> getDatasetIds();
 
-    String getJsonMetadataByDatasetId(UUID guid);
+    DatasetMetadata getMetadataByDatasetId(UUID guid);
 
-    void createOrUpdateMetadata(MetadataForm form) throws SQLException;
+    void createOrUpdateMetadata(DatasetMetadata form) throws SQLException;
 }

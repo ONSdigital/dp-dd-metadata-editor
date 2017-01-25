@@ -13,8 +13,8 @@
     background-color: #f8f8f8;
     border: 2px solid #ccc;
     font-family: "Courier New", Courier, monospace;
-    font-size: 17px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: normal;
 }
 
 label {
@@ -27,7 +27,7 @@ select {
 
 .field {
     font-size: 18px;
-    padding-top: 5px;
+    padding-top: 15px;
     padding-bottom: 5px;
 }
 
@@ -39,4 +39,14 @@ select {
     text-decoration: none;
     margin: 4px 2px;
     cursor: pointer;
+}
+
+.success {
+    padding: 20px;
+    background-color: #00b300;
+    color: white;
+    margin-bottom: 15px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
 }

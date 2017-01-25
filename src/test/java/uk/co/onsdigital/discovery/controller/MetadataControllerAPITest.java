@@ -9,7 +9,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
-import uk.co.onsdigital.discovery.model.MetadataForm;
+import uk.co.onsdigital.discovery.model.DatasetMetadata;
 import uk.co.onsdigital.discovery.validation.MetadataValidator;
 
 import java.util.ArrayList;
@@ -24,14 +24,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.co.onsdigital.discovery.controller.Metadata.DATASETS_LIST_KEY;
+import static uk.co.onsdigital.discovery.controller.MetadataController.DATASETS_LIST_KEY;
 
 /**
  * Created by dave on 24/01/2017.
  */
-public class MetadataAPITest {
+public class MetadataControllerAPITest {
 
-    private Metadata api;
+    private MetadataController api;
 
     @Mock
     private Model mockModel;
@@ -57,7 +57,7 @@ public class MetadataAPITest {
         datasetIds.add("DS2");
         datasetIds.add("DS3");
 
-        api = new Metadata();
+        api = new MetadataController();
         ReflectionTestUtils.setField(api, "validator", mockValidator);
         ReflectionTestUtils.setField(api, "datasetDAO", mockDatasetDAO);
     }
@@ -65,14 +65,14 @@ public class MetadataAPITest {
     @Test
     public void shouldGetMetadataForm() {
         String result = api.getMetadataForm(mockModel);
-        assertThat(result, equalTo(Metadata.EDITOR_VIEW));
-        verify(mockModel, times(1)).addAttribute(eq(Metadata.MODEL_KEY), any(MetadataForm.class));
+        assertThat(result, equalTo(MetadataController.EDITOR_VIEW));
+        verify(mockModel, times(1)).addAttribute(eq(MetadataController.MODEL_KEY), any(DatasetMetadata.class));
     }
 
     @Test
     public void shouldReturnEditorViewForValidationErrors() throws Exception {
-        MetadataForm form = new MetadataForm();
-        form.setJson("Patter cake, patter cake, patter cake man, 'Data Bake' me a cake as fast as you can!");
+        DatasetMetadata form = new DatasetMetadata();
+        form.setJsonMetadata("Patter cake, patter cake, patter cake man, 'Data Bake' me a cake as fast as you can!");
 
         doAnswer((invocationOnMock -> null))
                 .when(mockValidator).validate(form, mockBindingResult);
@@ -84,9 +84,9 @@ public class MetadataAPITest {
         String result = api.metadataSubmit(form, mockModel, mockBindingResult);
         verify(mockValidator, times(1)).validate(form, mockBindingResult);
         verify(mockDatasetDAO, times(1)).getDatasetIds();
-        verify(mockDatasetDAO, never()).createOrUpdateMetadata(any(MetadataForm.class));
+        verify(mockDatasetDAO, never()).createOrUpdateMetadata(any(DatasetMetadata.class));
         verify(mockModel, times(1)).addAttribute(DATASETS_LIST_KEY, datasetIds);
-        assertThat(result, equalTo(Metadata.EDITOR_VIEW));
+        assertThat(result, equalTo(MetadataController.EDITOR_VIEW));
     }
 
 }

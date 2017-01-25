@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
+import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class MetadataAPI {
     private DatasetDAO dao;
 
     @GetMapping("/metadata/{datasetID}")
-    public String getMetaData(@PathVariable String datasetID) {
-        return dao.getJsonMetadataByDatasetId(UUID.fromString(datasetID));
+    public DatasetMetadata getMetaData(@PathVariable String datasetID) {
+        return dao.getMetadataByDatasetId(UUID.fromString(datasetID));
     }
 }
