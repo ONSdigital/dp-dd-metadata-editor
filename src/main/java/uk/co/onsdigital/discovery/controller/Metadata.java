@@ -1,6 +1,7 @@
 package uk.co.onsdigital.discovery.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +12,6 @@ import uk.co.onsdigital.discovery.model.MetadataForm;
 import uk.co.onsdigital.discovery.validation.MetadataValidator;
 
 import javax.validation.Valid;
-import java.sql.SQLException;
 
 /**
  * Created by dave on 23/01/2017.
@@ -29,7 +29,6 @@ public class Metadata {
 
     @Autowired
     private DatasetDAO datasetDAO;
-
 
     @GetMapping("/metadata")
     public String getMetadataForm(Model model) {

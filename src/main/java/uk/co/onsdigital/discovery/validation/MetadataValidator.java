@@ -26,11 +26,11 @@ public class MetadataValidator implements Validator {
         try {
             new ObjectMapper().readValue(metadataForm.getJson(), JsonNode.class);
         } catch (Exception e) {
-            errors.reject("json", JSON_INVALID_ERR_KEY);
+            errors.rejectValue("json", JSON_INVALID_ERR_KEY);
         }
 
         if (StringUtils.isEmpty(metadataForm.getDatasetId())) {
-            errors.reject("datasetId", DATASET_ID_EMPTY_ERR_KEY);
+            errors.rejectValue("datasetId", DATASET_ID_EMPTY_ERR_KEY);
         }
     }
 }

@@ -19,6 +19,7 @@ import java.util.UUID;
 public class DatasetDAOImpl implements DatasetDAO {
 
     private static final String DATASET_IDS_QUERY = "SELECT dimensional_data_set_id FROM dimensional_data_set";
+    private static final String DATASET_BY_ID_QUERY = "SELECT json_metadata FROM dimensional_data_set WHERE dimensional_data_set_id = ?";
     private static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set SET json_metadata = ? WHERE dimensional_data_set_id = ?";
 
     @Autowired
@@ -26,6 +27,11 @@ public class DatasetDAOImpl implements DatasetDAO {
 
     public List<String> getDatasetIds() {
         return jdbcTemplate.queryForList(DATASET_IDS_QUERY, String.class);
+    }
+
+    @Override
+    public String getJsonMetadataByDatasetId(UUID guid) {
+        return jdbcTemplate.queryForObject(DATASET_BY_ID_QUERY, new Object[]{guid}, String.class);
     }
 
     @Override

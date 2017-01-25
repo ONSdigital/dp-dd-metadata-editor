@@ -29,7 +29,7 @@ import static uk.co.onsdigital.discovery.controller.Metadata.DATASETS_LIST_KEY;
 /**
  * Created by dave on 24/01/2017.
  */
-public class MetadataTest {
+public class MetadataAPITest {
 
     private Metadata api;
 
