@@ -24,8 +24,14 @@ $(document).ready(function() {
     $("#reset-btn").click(function() {
         $("#js-json-validation-err").hide();
         $("#ss-validation-error").hide();
+        $("#error-banner").hide();
         displayCurrentValues();
     })
+
+    $("#error-banner").click(function() {
+        $("#error-banner").hide("slow");
+    });
+
 });
 
 function displayCurrentValues() {
@@ -33,6 +39,10 @@ function displayCurrentValues() {
 
     if ($("#changes-successful").is(":visible")) {
         $("#changes-successful").hide("slow");
+    }
+
+    if ($("#error-banner").is(":visible")) {
+        $("#error-banner").hide("slow");
     }
 
     if ($('#dataset-select').val() != "") {
@@ -46,6 +56,11 @@ function displayCurrentValues() {
             }
             $("#major-version").val(response.majorVersion);
             $("#minor-version").val(response.minorVersion);
+            $("#revision-reason").val(response.revisionReason);
+            $("#revision-notes").val(response.revisionNotes);
+         }).fail(function(response) {
+            $("#error-banner").text(response.responseJSON.message);
+            $("#error-banner").show();
          });
     } else {
         $('#json-input').val("");

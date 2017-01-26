@@ -17,6 +17,17 @@
     font-weight: normal;
 }
 
+.revision-input {
+    width:100%;
+    max-width:100%;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    border: 2px solid #ccc;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    font-weight: normal;
+}
+
 label {
    font-size: 18px;
 }
@@ -44,6 +55,16 @@ select {
 .success {
     padding: 20px;
     background-color: #00b300;
+    color: white;
+    margin-bottom: 15px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.error-response {
+    padding: 20px;
+    background-color: #ff1a1a;
     color: white;
     margin-bottom: 15px;
     text-align: center;

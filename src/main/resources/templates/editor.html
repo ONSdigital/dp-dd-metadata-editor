@@ -25,7 +25,7 @@
     <div class="wrapper">
         <div class="col-wrap">
             <div class="col">
-                <h1>dp-dd-metadataForm-editor</h1>
+                <h1 th:text="#{page.title}"></h1>
             </div>
         </div>
     </div>
@@ -33,6 +33,10 @@
 
 <div>
     <div id="changes-successful" class="success" th:if="${updateSuccessful != null}" th:text="#{changes.successful.message(${uuid})}"></div>
+</div>
+
+<div>
+    <div id="error-banner" style="display: none;" class="error-response"></div>
 </div>
 
 <div class="wrapper">
@@ -63,7 +67,19 @@
                     <label for="json-input" th:text="#{'json.metadata.field.label'}"></label>
                     <div id="ss-validation-error" th:if="${#fields.hasErrors('jsonMetadata')}" th:errors="*{jsonMetadata}" class="validation-error"></div>
                     <div id="js-json-validation-err" class="validation-error" th:value="#{'dataset.json.metadata.invalid'}" style="display: none;" th:text="#{'dataset.json.metadata.invalid'}"></div>
-                    <textarea id="json-input" th:field="*{jsonMetadata}" rows="30" class="json-metadata-input"/>
+                    <textarea id="json-input" th:field="*{jsonMetadata}" rows="20" class="json-metadata-input"/>
+                </div>
+
+                <div class="field">
+                    <label for="revision-reason" th:text="#{'revision.reason.field.label'}"></label>
+                    <div id="revision-reason-err" th:if="${#fields.hasErrors('revisionReason')}" th:errors="*{revisionReason}" class="validation-error"></div>
+                    <textarea id="revision-reason" th:field="*{revisionReason}" rows="10" class="revision-input"/>
+                </div>
+
+                <div class="field">
+                    <label for="revision-notes" th:text="#{'revision.notes.field.label'}"></label>
+                    <div id="revision-notes-err" th:if="${#fields.hasErrors('revisionNotes')}" th:errors="*{revisionNotes}" class="validation-error"></div>
+                    <textarea id="revision-notes" th:field="*{revisionNotes}" rows="10" class="revision-input"/>
                 </div>
 
                 <div>
