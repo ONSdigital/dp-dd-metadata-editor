@@ -1,8 +1,8 @@
 package uk.co.onsdigital.discovery.dao;
 
+import uk.co.onsdigital.discovery.controller.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,9 +11,9 @@ import java.util.UUID;
  */
 public interface DatasetDAO {
 
-    List<String> getDatasetIds();
+    List<String> getDatasetIds() throws MetadataEditorException;
 
-    DatasetMetadata getMetadataByDatasetId(UUID guid);
+    DatasetMetadata getMetadataByDatasetId(UUID guid) throws MetadataEditorException;
 
-    void createOrUpdateMetadata(DatasetMetadata form) throws SQLException;
+    void createOrUpdateMetadata(DatasetMetadata form) throws MetadataEditorException;
 }

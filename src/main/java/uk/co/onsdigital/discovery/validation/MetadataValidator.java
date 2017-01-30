@@ -23,7 +23,6 @@ public class MetadataValidator implements Validator {
     public void validate(Object o, Errors errors) {
         DatasetMetadata datasetMetadata = (DatasetMetadata) o;
 
-
         if (StringUtils.isNotEmpty(datasetMetadata.getJsonMetadata())) {
             try {
                 new ObjectMapper().readValue(datasetMetadata.getJsonMetadata(), JsonNode.class);

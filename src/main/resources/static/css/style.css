@@ -71,3 +71,23 @@ select {
     vertical-align: middle;
     font-weight: bold;
 }
+
+.errorDetails {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 25px;
+    font-weight: bold;
+    display: block;
+}
+
+.errorStackTrace {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 13px;
+    font-weight: bold;
+    display: block;
+}
+
+.easterEgg {
+    padding-top: 30px;
+    text-align:  center;
+    display: block;
+}
