@@ -1,21 +1,28 @@
-dp-repo-template
+dp-dd-metadata-editor
 ================
-
-A template git repository for DP repos:
-
-* Standardised files for CHANGELOG, CONTRIBUTING, LICENSE and README
-* Default template for GitHub pull requests
-
+Provides simole web UI for creating / updating dataset metadata. 
 ### Getting started
 
-After creating a new repository on GitHub, use these commands to initialise
-it using this repository as a template:
+You will need tge following:
 
-* `git clone git@github.com:ONSdigital/dp-repo-template dp-new-repo-name`
-* `cd dp-new-repo-name`
-* `git remote set-url origin git@github.com:ONSdigital/dp-new-repo-name`
+* dp-dd-file-uploader
+* dp-csv-splitter
+* dp-dd-database-loader
+* dd-dimensional-metadata-api
 
-Remember to update the [README](README.md) and [CHANGELOG](CHANGELOG.md) files.
+### Building
+`mvn clean install`
+
+### Running
+`java -jar target/dp-dd-metadata-editor-1.0-SNAPSHOT.jar`
+
+Or to run in debug (port 5005)
+
+`mvn spring-boot:run`
+
+Got to `localhost:2300/` and you will be presented with a form allowing you to the current get metadata for given dataset
+(assuming you have a dataset loaded into you database).
+
 
 ### Configuration
 
@@ -24,7 +31,7 @@ environment variables, or with a link to a configuration guide.
 
 | Environment variable | Default | Description
 | -------------------- | ------- | -----------
-| BIND_ADDR            | :8080   | The host and port to bind to
+| BIND_ADDR           | :23000   | The port to bind to
 
 ### Contributing
 
