@@ -1,9 +1,9 @@
 dp-dd-metadata-editor
 ================
-Provides simole web UI for creating / updating dataset metadata. 
+Provides simple web UI for creating / updating dataset metadata. 
 ### Getting started
 
-You will need tge following:
+You will need the full dp-dd stack:
 
 * dp-dd-file-uploader
 * dp-csv-splitter
@@ -20,7 +20,7 @@ Or to run in debug (port 5005)
 
 `mvn spring-boot:run`
 
-Got to `localhost:2300/` and you will be presented with a form allowing you to the current get metadata for given dataset
+Got to `localhost:2300/` and you will be presented with a form allowing you to view/add/update the metadata for given dataset
 (assuming you have a dataset loaded into you database).
 
 
