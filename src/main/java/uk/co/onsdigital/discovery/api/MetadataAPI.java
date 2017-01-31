@@ -17,6 +17,9 @@ import java.util.UUID;
 
 import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
 
+/**
+ * REST endpoint for obtaining {@link DatasetMetadata} by datasetID.
+ */
 @RestController
 public class MetadataAPI {
 

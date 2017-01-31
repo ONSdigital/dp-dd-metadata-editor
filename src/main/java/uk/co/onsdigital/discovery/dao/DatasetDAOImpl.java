@@ -20,32 +20,48 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.DATABASE_ERROR;
 import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
+import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.STRING_TO_INT_ERROR;
+import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.UNEXPECTED_ERROR;
 
 /**
- *
+ * {@link DatasetDAO} impl - provides functionality for querying and updating {@link DatasetMetadata}.
  */
 @Component
 public class DatasetDAOImpl implements DatasetDAO {
 
+    /** Json metadata column name. */
     static final String JSON_METADATA_FIELD = "metadata";
+
+    /** Major version column name. */
     static final String MAJOR_VERSION_FIELD = "major_version";
+
+    /** Minor version column name. */
     static final String MINOR_VERSION_FIELD = "minor_version";
+
+    /** Revision Notes column name */
     static final String REVISION_NOTES_FIELD = "revision_notes";
+
+    /** Revision Reason column name. */
     static final String REVISION_REASON_FIELD = "revision_reason";
+
+    /** Dimensional Dataset ID column name. */
     static final String DATASET_ID_FIELD = "dimensional_data_set_id";
 
     /**
-     * QUERY - Get all DimensionalDataSet IDs.
+     * Query for all DimensionalDataSet IDs.
      */
     static final String DATASET_IDS_QUERY = "SELECT dimensional_data_set_id FROM dimensional_data_set";
 
     /**
-     * SQL - Get DimensionalDataSet by its ID.
+     * Query for a DimensionalDataSet by its ID.
      */
     static final String DATASET_BY_ID_QUERY = "SELECT " +
             "dimensional_data_set_id, metadata, major_version, minor_version, revision_notes, revision_reason " +
             "FROM dimensional_data_set WHERE dimensional_data_set_id = :dimensional_data_set_id";
 
+    /**
+     * Update statement for persisting new/updating metadata.
+     */
     static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set " +
             "SET metadata = :metadata,  major_version = :major_version, minor_version = :minor_version," +
             " revision_notes = :revision_notes, revision_reason = :revision_reason " +
@@ -58,7 +74,9 @@ public class DatasetDAOImpl implements DatasetDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-
+    /**
+     * {@link RowMapper} implementation for extracting data row data into {@link DatasetMetadata}.
+     */
     private RowMapper<DatasetMetadata> metadataRowMapper = (rs, i) ->
             new DatasetMetadata()
                     .setJsonMetadata(getStr(rs, JSON_METADATA_FIELD))
@@ -70,16 +88,16 @@ public class DatasetDAOImpl implements DatasetDAO {
 
 
     // Function encapsulates the creation of the MapSqlParameterSource. Can be easily be swapped for mock in test.
-    private Function<NamedParam[], MapSqlParameterSource> createParameterSource = (tuples) -> {
+    private Function<List<NamedParam>, MapSqlParameterSource> createParameterSource = (list) -> {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-        for (NamedParam namedParam : tuples) {
+        for (NamedParam namedParam : list) {
             sqlParameterSource.addValue(namedParam.getKey(), namedParam.getValue());
         }
         return sqlParameterSource;
     };
 
     @Override
-    public List<String> getDatasetIds() throws MetadataEditorException {
+    public java.util.List getDatasetIds() throws MetadataEditorException {
         try {
             return namedParameterJdbcTemplate.queryForList(DATASET_IDS_QUERY, new MapSqlParameterSource(), String.class);
         } catch (Exception ex) {
@@ -88,12 +106,15 @@ public class DatasetDAOImpl implements DatasetDAO {
     }
 
     @Override
-    public DatasetMetadata getMetadataByDatasetId(UUID guid) throws MetadataEditorException {
-        if (guid == null) {
+    public DatasetMetadata getMetadataByDatasetId(UUID datasetID) throws MetadataEditorException {
+        if (datasetID == null) {
             throw new MetadataEditorException(DATASET_ID_MISSING);
         }
         try {
-            SqlParameterSource sqlParameterSource = createParameterSource.apply(toArray(namedParam(DATASET_ID_FIELD, guid)));
+            SqlParameterSource sqlParameterSource = createParameterSource.apply(
+                    new NamedParam.ListBuilder()
+                            .addParam(DATASET_ID_FIELD, datasetID)
+                            .toList());
             return namedParameterJdbcTemplate.queryForObject(DATASET_BY_ID_QUERY, sqlParameterSource, metadataRowMapper);
         } catch (DataAccessException ex) {
             throw new MetadataEditorException(DATABASE_ERROR, ex);
@@ -105,27 +126,28 @@ public class DatasetDAOImpl implements DatasetDAO {
         try {
             int minorVersion = isEmpty(form.getMinorVersion()) ? 0 : Integer.parseInt(form.getMinorVersion());
 
-            SqlParameterSource sqlParameterSource = createParameterSource.apply(toArray(
-                    namedParam(JSON_METADATA_FIELD, form.getJsonMetadata()),
-                    namedParam(MAJOR_VERSION_FIELD, Integer.parseInt(form.getMajorVersion())),
-                    namedParam(MINOR_VERSION_FIELD, minorVersion),
-                    namedParam(REVISION_NOTES_FIELD, form.getRevisionNotes()),
-                    namedParam(REVISION_REASON_FIELD, form.getRevisionReason()),
-                    namedParam(DATASET_ID_FIELD, UUID.fromString(form.getDatasetId()))
-            ));
+            SqlParameterSource sqlParameterSource = createParameterSource.apply(
+                    new NamedParam.ListBuilder()
+                            .addParam(JSON_METADATA_FIELD, form.getJsonMetadata())
+                            .addParam(MAJOR_VERSION_FIELD, Integer.parseInt(form.getMajorVersion()))
+                            .addParam(MINOR_VERSION_FIELD, minorVersion)
+                            .addParam(REVISION_NOTES_FIELD, form.getRevisionNotes())
+                            .addParam(REVISION_REASON_FIELD, form.getRevisionReason())
+                            .addParam(DATASET_ID_FIELD, UUID.fromString(form.getDatasetId()))
+                            .toList()
+            );
 
             namedParameterJdbcTemplate.update(UPDATE_METADATA_QUERY, sqlParameterSource);
-        } catch (DataAccessException ex) {
-            throw new MetadataEditorException(DATABASE_ERROR, ex);
+        } catch (Exception ex) {
+            MetadataEditorException.ErrorCode errorCode = UNEXPECTED_ERROR;
+
+            if (ex instanceof DataAccessException) {
+                errorCode = DATABASE_ERROR;
+            } else if (ex instanceof NumberFormatException) {
+                errorCode = STRING_TO_INT_ERROR;
+            }
+            throw new MetadataEditorException(errorCode, ex);
         }
-    }
-
-    private NamedParam namedParam(String key, Object value) {
-        return new NamedParam(key, value);
-    }
-
-    private NamedParam[] toArray(NamedParam... p) {
-        return p;
     }
 }
 

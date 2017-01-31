@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import java.text.MessageFormat;
 
 /**
- * Created by dave on 26/01/2017.
+ * Response object returned by {@link uk.co.onsdigital.discovery.api.MetadataAPI} for any failure scenario.
  */
 public class ErrorResponse {
 

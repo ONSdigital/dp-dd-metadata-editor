@@ -54,11 +54,13 @@
                 </div>
 
                 <div class="field">
+                    <div id="major-version-err" th:if="${#fields.hasErrors('majorVersion')}" th:errors="*{majorVersion}" class="validation-error"></div>
                     <label for="major-version" th:text="#{'major.version.field.label'}"></label>
                     <input type="text" id="major-version" th:field="*{majorVersion}" />
                 </div>
 
                 <div class="field">
+                    <div id="minor-version-err" th:if="${#fields.hasErrors('minorVersion')}" th:errors="*{minorVersion}" class="validation-error"></div>
                     <label for="minor-version" th:text="#{'minor.version.field.label'}"></label>
                     <input type="text" id="minor-version" th:field="*{minorVersion}" />
                 </div>

@@ -57,8 +57,8 @@ public class DatasetDAOImplTest {
     private DatasetDAO dao;
     private List<String> datasetIds;
     private int createParameterSourceStubInvocations = 0;
-    private NamedParam[] createParameterSourceStubArgs;
-    private Function<NamedParam[], MapSqlParameterSource> createParameterSourceStub;
+    private List<NamedParam> createParameterSourceStubArgs;
+    private Function<List<NamedParam>, MapSqlParameterSource> createParameterSourceStub;
 
     @Before
     public void setUp() {
@@ -147,7 +147,9 @@ public class DatasetDAOImplTest {
         given(jdbcTemplateMock.queryForObject(anyString(), any(SqlParameterSource.class), any(RowMapper.class)))
                 .willThrow(new MyDataAccessException("ITS BROKEN"));
 
-        NamedParam[] expectedParams = {new NamedParam(DATASET_ID_FIELD, datasetId)};
+        List<NamedParam> expectedParams = new NamedParam.ListBuilder()
+                .addParam(DATASET_ID_FIELD, datasetId)
+                .toList();
 
         try {
             dao.getMetadataByDatasetId(datasetId);
@@ -172,14 +174,14 @@ public class DatasetDAOImplTest {
                 .setRevisionReason("")
                 .setJsonMetadata("");
 
-        NamedParam[] expectedParams = {
-                new NamedParam(JSON_METADATA_FIELD, ""),
-                new NamedParam(MAJOR_VERSION_FIELD, 1),
-                new NamedParam(MINOR_VERSION_FIELD, 0),
-                new NamedParam(REVISION_NOTES_FIELD, ""),
-                new NamedParam(REVISION_REASON_FIELD, ""),
-                new NamedParam(DATASET_ID_FIELD, datasetId)
-        };
+        List<NamedParam> expectedParams = new NamedParam.ListBuilder()
+                .addParam(JSON_METADATA_FIELD, "")
+                .addParam(MAJOR_VERSION_FIELD, 1)
+                .addParam(MINOR_VERSION_FIELD, 0)
+                .addParam(REVISION_NOTES_FIELD, "")
+                .addParam(REVISION_REASON_FIELD, "")
+                .addParam(DATASET_ID_FIELD, datasetId)
+                .toList();
 
         dao.createOrUpdateMetadata(metadata);
 
@@ -203,14 +205,14 @@ public class DatasetDAOImplTest {
                 .setRevisionReason("")
                 .setJsonMetadata("");
 
-        NamedParam[] expectedParams = {
-                new NamedParam(JSON_METADATA_FIELD, ""),
-                new NamedParam(MAJOR_VERSION_FIELD, 1),
-                new NamedParam(MINOR_VERSION_FIELD, 0),
-                new NamedParam(REVISION_NOTES_FIELD, ""),
-                new NamedParam(REVISION_REASON_FIELD, ""),
-                new NamedParam(DATASET_ID_FIELD, datasetId)
-        };
+        List<NamedParam> expectedParams = new NamedParam.ListBuilder()
+                .addParam(JSON_METADATA_FIELD, "")
+                .addParam(MAJOR_VERSION_FIELD, 1)
+                .addParam(MINOR_VERSION_FIELD, 0)
+                .addParam(REVISION_NOTES_FIELD, "")
+                .addParam(REVISION_REASON_FIELD, "")
+                .addParam(DATASET_ID_FIELD, datasetId)
+                .toList();
 
 
         doThrow(new MyDataAccessException("Twang"))

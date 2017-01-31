@@ -15,7 +15,8 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Created by dave on 27/01/2017.
+ * Error handler handling any errors throw by the MVC application. Returns a customised error page with details of the
+ * error.
  */
 @ControllerAdvice
 @Component
@@ -33,9 +34,12 @@ public class GlobalErrorHandler implements ErrorViewResolver {
         model.addAttribute(ERROR_DETAILS_PARAM_NAME, ex.getMessage());
         model.addAttribute(ERROR_STACKTRACE_PARAM_NAME, ExceptionUtils.getStackTrace(ex));
         model.addAttribute(EASTER_EGG_PARAM_NAME, getImage());
-        return "error";
+        return ERROR_VIEW;
     }
 
+    /**
+     * Custom Error View resolver - returns a customised 404 Page not found.
+     */
     @Override
     public ModelAndView resolveErrorView(HttpServletRequest httpServletRequest, HttpStatus httpStatus, Map<String, Object> map) {
         ModelAndView modelAndView = new ModelAndView();

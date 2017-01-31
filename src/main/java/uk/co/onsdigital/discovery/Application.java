@@ -11,7 +11,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 /**
- * Created by dave on 23/01/2017.
+ * Start up class for the application.
  */
 @SpringBootApplication
 @ComponentScan(basePackages = "uk.co.onsdigital.discovery")

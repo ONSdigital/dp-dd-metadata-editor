@@ -23,7 +23,8 @@ import static org.apache.commons.lang3.StringUtils.trim;
 import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.JSON_PARSE_ERROR;
 
 /**
- *
+ * The Metadata editor MVC controller. Provides functionality for getting datasetIDS, getting metadata by datasetID
+ * and creating / updating metadata.
  */
 @Controller
 public class MetadataController {
@@ -40,6 +41,12 @@ public class MetadataController {
     @Autowired
     private DatasetDAO datasetDAO;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    /**
+     * Return the Editor form.
+     */
     @GetMapping("/")
     public String getMetadataForm(Model model, HttpServletResponse response) throws MetadataEditorException {
         model.addAttribute(MODEL_KEY, new DatasetMetadata());
@@ -48,10 +55,14 @@ public class MetadataController {
         return EDITOR_VIEW;
     }
 
+    /**
+     * Handle post requests to  update/create dataset metadata. If there are any validation errors then the user is taken
+     * back to the editor view and each validation message will be displayed.
+     */
     @PostMapping("/")
     public String metadataSubmit(@Valid DatasetMetadata datasetMetadata, Model model, BindingResult bindingResult,
                                  HttpServletResponse response)
-            throws Exception {
+            throws MetadataEditorException {
         validator.validate(datasetMetadata, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
@@ -68,11 +79,13 @@ public class MetadataController {
         return EDITOR_VIEW;
     }
 
+    /**
+     * Clean up the form data. Check if the JSON metadata is valid JSON, minify it to remove any unnecessary whitespace.
+     */
     private DatasetMetadata sanitise(DatasetMetadata metadata) throws MetadataEditorException {
         if (isNotEmpty(metadata.getJsonMetadata())) {
             try {
-                ObjectMapper m = new ObjectMapper();
-                JsonNode jNode = m.readValue(metadata.getJsonMetadata().trim(), JsonNode.class);
+                JsonNode jNode = objectMapper.readValue(metadata.getJsonMetadata().trim(), JsonNode.class);
                 metadata.setJsonMetadata(jNode.toString());
             } catch (IOException e) {
                 throw new MetadataEditorException(JSON_PARSE_ERROR);
