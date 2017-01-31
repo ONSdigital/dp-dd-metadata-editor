@@ -10,7 +10,8 @@ $(document).ready(function() {
                 var jsonObj = JSON.parse(jsonMetadata);
                 $('#json-input').val(JSON.stringify(jsonObj, null, '\t'));
                 $("#js-json-validation-err").hide();
-
+                $("#major-version-err").hide();
+                $("#minor-version-err").hide();
             } catch (e) {
                 if ($("#ss-validation-error").is(":visible")) {
                     // do nothing.
@@ -24,7 +25,9 @@ $(document).ready(function() {
     $("#reset-btn").click(function() {
         $("#js-json-validation-err").hide();
         $("#ss-validation-error").hide();
+        $("#major-version-err").hide();
         $("#error-banner").hide();
+        $("#minor-version-err").hide();
         displayCurrentValues();
     })
 
@@ -36,14 +39,11 @@ $(document).ready(function() {
 
 function displayCurrentValues() {
     $("#js-json-validation-err").hide();
-
-    if ($("#changes-successful").is(":visible")) {
-        $("#changes-successful").hide("slow");
-    }
-
-    if ($("#error-banner").is(":visible")) {
-        $("#error-banner").hide("slow");
-    }
+    $("#ss-validation-error").hide();
+    $("#changes-successful").hide();
+    $("#error-banner").hide();
+    $("#major-version-err").hide();
+    $("#minor-version-err").hide();
 
     if ($('#dataset-select').val() != "") {
         $.ajax({
@@ -64,5 +64,9 @@ function displayCurrentValues() {
          });
     } else {
         $('#json-input').val("");
+        $('#major-version').val("");
+        $('#minor-version').val("");
+        $('#revision-reason').val("");
+        $('#revision-notes').val("");
     }
 }

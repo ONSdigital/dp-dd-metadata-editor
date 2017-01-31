@@ -3,57 +3,67 @@ package uk.co.onsdigital.discovery.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import uk.co.onsdigital.discovery.controller.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
 
 /**
- * Created by dave on 26/01/2017.
+ * Test verifying the behaviour of {@link MetadataAPI}.
  */
-@RunWith(SpringRunner.class)
-@RestClientTest(MetadataAPI.class)
 public class MetadataAPITest {
 
-    @Autowired
-    private MetadataAPI metadataAPI;
-
-    @MockBean
-    private RestTemplate restTemplate;
-
-    @MockBean
+    @Mock
     private DatasetDAO datasetDAOMock;
 
-    private MockRestServiceServer server;
+    private MetadataAPI api;
 
     @Before
     public void setup() {
-        server = MockRestServiceServer.createServer(restTemplate);
+        MockitoAnnotations.initMocks(this);
+
+        api = new MetadataAPI();
+
+        ReflectionTestUtils.setField(api, "dao", datasetDAOMock);
     }
 
-
     @Test
-    public void testExample() throws Exception {
-        UUID uuid = UUID.randomUUID();
-        DatasetMetadata metadata = new DatasetMetadata().setDatasetId(uuid.toString());
+    public void shouldGetDatasetMetadata() throws Exception {
+        UUID datasetID = UUID.randomUUID();
+        DatasetMetadata metadata = new DatasetMetadata().setDatasetId(datasetID.toString());
 
         String json = new ObjectMapper().writeValueAsString(metadata);
 
-        this.server.expect(requestTo("/metadata/" + uuid.toString()))
-                .andRespond(withSuccess(json, MediaType.APPLICATION_JSON));
+        given(datasetDAOMock.getMetadataByDatasetId(datasetID))
+                .willReturn(metadata);
 
-        this.metadataAPI.getMetaData(uuid.toString());
+        DatasetMetadata result = api.getMetaData(datasetID.toString());
+
+        assertThat(result, equalTo(metadata));
+        verify(datasetDAOMock, times(1)).getMetadataByDatasetId(datasetID);
+    }
+
+    @Test(expected = MetadataEditorException.class)
+    public void shouldThrowMetadataEditorExceptionForDatasetIdNull() throws Exception {
+        try {
+            api.getMetaData(null);
+        } catch (MetadataEditorException e) {
+            verifyZeroInteractions(datasetDAOMock);
+            assertThat(e.getErrorCode(), equalTo(DATASET_ID_MISSING));
+            throw e;
+        }
     }
 
 }

@@ -1,58 +1,44 @@
 package uk.co.onsdigital.discovery.dao;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
-public class NamedParam {
-
-    private String key;
-    private Object value;
+/**
+ * A key pair type to encapsulate named parameter values for use with named queries.
+ */
+public class NamedParam extends AbstractMap.SimpleEntry<String, Object> {
 
     public NamedParam(String key, Object value) {
-        this.key = key;
-        this.value = value;
+        super(key, value);
     }
 
-    public String getKey() {
-        return key;
-    }
+    /**
+     * Provides a convenient way of creating {@link NamedParam}'s and adding them to a {@link List}
+     */
+    static class ListBuilder {
+        private List<NamedParam> list;
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+        public ListBuilder() {
+            this.list = new ArrayList<>();
+        }
 
-    public Object getValue() {
-        return value;
-    }
+        /**
+         * Creates a new {@link NamedParam} and adds it to the list.
+         * @param key the name of the parameter field.
+         * @param value the value of the parameter to insert into the named query.
+         * @return its self enabling method chaining.
+         */
+        public ListBuilder addParam(String key, Object value) {
+            this.list.add(new NamedParam(key, value));
+            return this;
+        }
 
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        NamedParam that = (NamedParam) o;
-
-        return new EqualsBuilder()
-                .append(getKey(), that.getKey())
-                .append(getValue(), that.getValue())
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(getKey())
-                .append(getValue())
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "[key=" + this.getKey() + ", value=" + this.getValue() + "]";
+        /**
+         * @return the list of {@link NamedParam} values.
+         */
+        public List<NamedParam> toList() {
+            return this.list;
+        }
     }
 }

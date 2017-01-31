@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Created by dave on 23/01/2017.
+ * Model representing the Metadata fields of the DinmensionalDataSet table.
  */
 public class DatasetMetadata {
 
