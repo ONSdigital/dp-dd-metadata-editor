@@ -97,7 +97,7 @@ public class DatasetDAOImpl implements DatasetDAO {
     };
 
     @Override
-    public java.util.List getDatasetIds() throws MetadataEditorException {
+    public List<String> getDatasetIds() throws MetadataEditorException {
         try {
             return namedParameterJdbcTemplate.queryForList(DATASET_IDS_QUERY, new MapSqlParameterSource(), String.class);
         } catch (Exception ex) {

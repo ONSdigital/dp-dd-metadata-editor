@@ -14,9 +14,9 @@ You will need the full dp-dd stack:
 `mvn clean install`
 
 ### Running
-`java -jar target/dp-dd-metadata-editor-1.0-SNAPSHOT.jar`
+`java $JAVA_OPTS -Dpostgres.username=data_discovery -Dpostgres.password=password -Dpostgres.host=localhost -Dpostgres.port=5432 -jar target/dp-dd-metadata-editor-1.0-SNAPSHOT.jar`
 
-Or to run in debug (connect on port 5005)
+Or to run in debug (connect on port 5005) uncomment the dev defaults in application.properties and run: 
 
 `mvn spring-boot:run`
 
