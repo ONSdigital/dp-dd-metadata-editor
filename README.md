@@ -16,11 +16,11 @@ You will need the full dp-dd stack:
 ### Running
 `java -jar target/dp-dd-metadata-editor-1.0-SNAPSHOT.jar`
 
-Or to run in debug (port 5005)
+Or to run in debug (connect on port 5005)
 
 `mvn spring-boot:run`
 
-Got to `localhost:2300/` and you will be presented with a form allowing you to view/add/update the metadata for given dataset
+Go to `localhost:23000/` and you will be presented with a form allowing you to view/add/update the metadata for given dataset
 (assuming you have a dataset loaded into you database).
 
 
