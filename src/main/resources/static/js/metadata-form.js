@@ -12,6 +12,7 @@ $(document).ready(function() {
                 $("#js-json-validation-err").hide();
                 $("#major-version-err").hide();
                 $("#minor-version-err").hide();
+                $("#ss-validation-error").hide();
             } catch (e) {
                 if ($("#ss-validation-error").is(":visible")) {
                     // do nothing.

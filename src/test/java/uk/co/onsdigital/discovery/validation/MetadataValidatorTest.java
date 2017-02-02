@@ -20,6 +20,7 @@ import static uk.co.onsdigital.discovery.validation.MetadataValidator.JSON_METAD
 import static uk.co.onsdigital.discovery.validation.MetadataValidator.MAJOR_VERSION_EMPTY;
 import static uk.co.onsdigital.discovery.validation.MetadataValidator.MAJOR_VERSION_FIELD_NAME;
 import static uk.co.onsdigital.discovery.validation.MetadataValidator.MAJOR_VERSION_NOT_NUMBER;
+import static uk.co.onsdigital.discovery.validation.MetadataValidator.MINOR_VERSION_EMPTY;
 import static uk.co.onsdigital.discovery.validation.MetadataValidator.MINOR_VERSION_FIELD_NAME;
 import static uk.co.onsdigital.discovery.validation.MetadataValidator.MINOR_VERSION_NOT_NUMBER;
 
@@ -79,6 +80,15 @@ public class MetadataValidatorTest {
         validator.validate(datasetMetadata, mockBindingResult);
 
         verify(mockBindingResult, times(1)).rejectValue(MAJOR_VERSION_FIELD_NAME, MAJOR_VERSION_NOT_NUMBER);
+    }
+
+    @Test
+    public void shouldRejectIfMinorVersionEmpty() {
+        datasetMetadata = new DatasetMetadata()
+                .setDatasetId(UUID.randomUUID().toString())
+                .setMajorVersion("1");
+        validator.validate(datasetMetadata, mockBindingResult);
+        verify(mockBindingResult, times(1)).rejectValue(MINOR_VERSION_FIELD_NAME, MINOR_VERSION_EMPTY);
     }
 
     @Test
