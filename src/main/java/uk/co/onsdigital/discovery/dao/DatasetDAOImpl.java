@@ -124,13 +124,11 @@ public class DatasetDAOImpl implements DatasetDAO {
     @Override
     public void createOrUpdateMetadata(DatasetMetadata form) throws MetadataEditorException {
         try {
-            int minorVersion = isEmpty(form.getMinorVersion()) ? 0 : Integer.parseInt(form.getMinorVersion());
-
             SqlParameterSource sqlParameterSource = createParameterSource.apply(
                     new NamedParam.ListBuilder()
                             .addParam(JSON_METADATA_FIELD, form.getJsonMetadata())
                             .addParam(MAJOR_VERSION_FIELD, Integer.parseInt(form.getMajorVersion()))
-                            .addParam(MINOR_VERSION_FIELD, minorVersion)
+                            .addParam(MINOR_VERSION_FIELD, Integer.parseInt(form.getMinorVersion()))
                             .addParam(REVISION_NOTES_FIELD, form.getRevisionNotes())
                             .addParam(REVISION_REASON_FIELD, form.getRevisionReason())
                             .addParam(DATASET_ID_FIELD, UUID.fromString(form.getDatasetId()))

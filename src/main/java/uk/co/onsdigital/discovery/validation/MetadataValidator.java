@@ -25,6 +25,7 @@ public class MetadataValidator implements Validator {
     static final String MAJOR_VERSION_EMPTY = "dataset.major.version.empty";
 
     static final String MINOR_VERSION_NOT_NUMBER = "dataset.minor.version.number.format.ex";
+    static final String MINOR_VERSION_EMPTY = "dataset.minor.version.empty";
 
     static final String JSON_METADATA_FIELD_NAME = "jsonMetadata";
     static final String DATASET_ID_FIELD_NAME = "datasetId";
@@ -86,6 +87,10 @@ public class MetadataValidator implements Validator {
     }
 
     private void validateMinorVersion(Errors errors, DatasetMetadata metadata) {
+        if (isEmpty(metadata.getMinorVersion())) {
+            errors.rejectValue(MINOR_VERSION_FIELD_NAME, MINOR_VERSION_EMPTY);
+        }
+
         if (isNotEmpty(metadata.getMinorVersion())) {
             try {
                 Integer.parseInt(metadata.getMinorVersion());
