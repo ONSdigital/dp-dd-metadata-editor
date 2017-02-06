@@ -7,7 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
-import uk.co.onsdigital.discovery.controller.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.sql.ResultSet;
@@ -16,12 +17,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.DATABASE_ERROR;
-import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
-import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.STRING_TO_INT_ERROR;
-import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.UNEXPECTED_ERROR;
+import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATABASE_ERROR;
+import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
+import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.STRING_TO_INT_ERROR;
+import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.UNEXPECTED_ERROR;
 
 /**
  * {@link DatasetDAO} impl - provides functionality for querying and updating {@link DatasetMetadata}.

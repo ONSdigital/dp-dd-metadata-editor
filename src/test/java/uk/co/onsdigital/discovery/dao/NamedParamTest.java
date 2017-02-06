@@ -1,6 +1,7 @@
 package uk.co.onsdigital.discovery.dao;
 
 import org.junit.Test;
+import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
 
 import java.util.ArrayList;
 import java.util.List;

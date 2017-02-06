@@ -1,4 +1,4 @@
-package uk.co.onsdigital.discovery.validation;
+package uk.co.onsdigital.discovery.validation.annotation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,12 +9,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = JSONStringValidator.class)
+@Constraint(validatedBy = UUIDStringValidator.class)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JSONString {
+public @interface UUID {
 
-    String message() default "string.json.validation.err";
+    String message() default "string.uuid.validation.err";
 
     Class<?>[] groups() default {};
 

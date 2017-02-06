@@ -1,17 +1,22 @@
 package uk.co.onsdigital.discovery.model;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import uk.co.onsdigital.discovery.validation.JSONString;
+import uk.co.onsdigital.discovery.validation.annotation.JSON;
 
 public class DataResource {
+
+    public static final String DATA_RESOURCE_COL_NAME = "data_resource";
+    public static final String TITLE_COL_NAME = "title";
+    public static final String METADATA_COL_NAME = "metadata";
 
     @NotEmpty(message = "data.resource.data.resource.id.empty")
     private String dataResourceID;
 
-    @NotEmpty(message = "data.resource.title.empty")
+    @Length(min = 3, message = "data.resource.title.min.length")
     private String title;
 
-    @JSONString(message = "data.resource.metadata.invalid.json")
+    @JSON(message = "data.resource.metadata.invalid.json")
     private String metadata;
 
     public DataResource setDataResourceID(String dataResourceID) {

@@ -1,4 +1,4 @@
-package uk.co.onsdigital.discovery.validation;
+package uk.co.onsdigital.discovery.validation.annotation;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,17 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-/**
- * Created by dave on 03/02/2017.
- */
-public class JSONStringValidator implements ConstraintValidator<JSONString, String> {
+public class JSONStringValidator implements ConstraintValidator<JSON, String> {
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Override
-    public void initialize(JSONString jsonString) {
-    }
+    public void initialize(JSON json) { }
 
     @Override
     public boolean isValid(String json, ConstraintValidatorContext constraintValidatorContext) {

@@ -31,10 +31,7 @@
     </div>
 </div>
 
-<div>
-    <div dataResourceID="changes-successful" class="success" th:if="${updateSuccessful != null}"
-         th:text="#{changes.successful.message(${uuid})}"></div>
-</div>
+<div class="success" id="changes-successful" style="display:none;">Success</div>
 
 <div class="wrapper">
     <div class="col-wrap">

@@ -5,6 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import uk.co.onsdigital.discovery.model.DataResource;
 
+/**
+ * MVC controller to return the Create Data Resource form.
+ */
 @Controller
 public class DataResourceController {
 
