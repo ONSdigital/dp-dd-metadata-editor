@@ -22,6 +22,9 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+/**
+ * REST API endpoint for Creating, updating and viewing {@link DataResource}'s.
+ */
 @RestController
 public class DataResourceAPI {
 

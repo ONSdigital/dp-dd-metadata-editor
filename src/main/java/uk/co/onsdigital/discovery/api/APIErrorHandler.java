@@ -16,12 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+/**
+ * Error handler for REST API.
+ */
 @RestControllerAdvice
 public class APIErrorHandler {
 
     @Autowired
     private MessageSource messageSource;
 
+    /**
+     * Handle {@link DataResourceValidationException}'s
+     */
     @ExceptionHandler(value = DataResourceValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ValidationErrors dataResValidationErr(DataResourceValidationException ex, HttpServletResponse response) {
@@ -29,6 +35,9 @@ public class APIErrorHandler {
         return new ValidationErrors(ex.getBindingResult(), messageSource);
     }
 
+    /**
+     * Handle {@link DataResourceException}'s
+     */
     @ExceptionHandler(value = {DataResourceException.class, MetadataEditorException.class})
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ErrorResponse handleDataResourceError(DataResourceException ex, HttpServletResponse response) {

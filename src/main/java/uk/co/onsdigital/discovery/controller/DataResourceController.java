@@ -10,7 +10,7 @@ import uk.co.onsdigital.discovery.exception.DataResourceException;
 import uk.co.onsdigital.discovery.model.DataResource;
 
 /**
- * MVC controller to return the Create Data Resource form.
+ * MVC controller to return the Create/Update Data Resource form.
  */
 @Controller
 public class DataResourceController {

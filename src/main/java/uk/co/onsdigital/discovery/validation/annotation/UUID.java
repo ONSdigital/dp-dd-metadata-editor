@@ -8,6 +8,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Fields annotated with {@link UUID} must be valid {@link java.util.UUID} strings.
+ */
 @Documented
 @Constraint(validatedBy = UUIDStringValidator.class)
 @Target(ElementType.FIELD)

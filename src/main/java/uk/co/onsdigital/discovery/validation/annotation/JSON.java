@@ -8,6 +8,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Fields annotated with this must be valid JSON strings.
+ */
 @Documented
 @Constraint(validatedBy = JSONStringValidator.class)
 @Target(ElementType.FIELD)
