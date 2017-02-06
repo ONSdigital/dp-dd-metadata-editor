@@ -47,7 +47,7 @@ public class MetadataController {
     /**
      * Return the Editor form.
      */
-    @GetMapping("/")
+    @GetMapping("/metadata")
     public String getMetadataForm(Model model, HttpServletResponse response) throws MetadataEditorException {
         model.addAttribute(MODEL_KEY, new DatasetMetadata());
         model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
@@ -59,7 +59,7 @@ public class MetadataController {
      * Handle post requests to  update/create dataset metadata. If there are any validation errors then the user is taken
      * back to the editor view and each validation message will be displayed.
      */
-    @PostMapping("/")
+    @PostMapping("/metadata")
     public String metadataSubmit(@Valid DatasetMetadata datasetMetadata, Model model, BindingResult bindingResult,
                                  HttpServletResponse response)
             throws MetadataEditorException {

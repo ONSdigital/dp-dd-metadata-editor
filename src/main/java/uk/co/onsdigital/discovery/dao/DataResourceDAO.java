@@ -9,6 +9,8 @@ public interface DataResourceDAO {
 
     void create(DataResource dataResource) throws DataResourceException;
 
+    void update(DataResource dataResource) throws DataResourceException;
+
     DataResource getByID(String dataResourceID) throws DataResourceException;
 
     List<DataResource> getAll() throws DataResourceException;

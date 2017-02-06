@@ -77,7 +77,7 @@ public class MetadataControllerTest {
         given(this.mockDatasetDAO.getDatasetIds())
                 .willReturn(datasetIds);
 
-        ModelAndView modelAndView = this.mvc.perform(get("/")
+        ModelAndView modelAndView = this.mvc.perform(get("/metadata")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(view().name(EDITOR_VIEW))
@@ -97,7 +97,7 @@ public class MetadataControllerTest {
         given(mockDatasetDAO.getDatasetIds())
                 .willThrow(new EmptyResultDataAccessException(expectedErrorMessage, 0));
 
-        MvcResult mvcResult = this.mvc.perform(get("/")
+        MvcResult mvcResult = this.mvc.perform(get("/metadata")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
@@ -117,7 +117,7 @@ public class MetadataControllerTest {
         given(mockBindingResult.hasErrors())
                 .willReturn(true);
 
-        MvcResult mvcResult = this.mvc.perform(post("/")
+        MvcResult mvcResult = this.mvc.perform(post("/metadata")
                 .param("jsonMetadata", form.getJsonMetadata())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())

@@ -1,0 +1,24 @@
+### Create a data resource.
+curl \
+-H "Content-Type: application/json" \
+-i \
+-X POST \
+-d '{"title":"Test Data Resource 1.0","dataResourceID":"AF2501010","metadata":"{ \"name\" : \"Test Data Resource 1.0\"}"}' \
+http://localhost:23000/dataResource
+
+
+### Update a data resource.
+curl \
+-H "Content-Type: application/json" \
+-i \
+-X PUT \
+-d '{"title":"Test Data Resource 2.0","dataResourceID":"AF2501010","metadata":"{ \"name\" : \"Test Data Resource 2.0\"}"}' \
+http://localhost:23000/dataResource/AF2501010
+
+
+### Get all data resources.
+curl -X GET http://localhost:23000/dataResources
+
+
+### Get all data resources.
+curl -X GET http://localhost:23000/dataResources/{dataResourceID}

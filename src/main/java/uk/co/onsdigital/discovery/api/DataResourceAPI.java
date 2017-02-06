@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static java.lang.String.format;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
 public class DataResourceAPI {
@@ -29,6 +30,9 @@ public class DataResourceAPI {
     @Autowired
     private DataResourceDAO dataResourceDAO;
 
+    /**
+     * Create a new {@link DataResource}
+     */
     @RequestMapping(value = "/dataResource", method = RequestMethod.POST)
     public ResponseEntity<CreatedResponse> createDataResource(@Valid @RequestBody DataResource dataResource,
                                                               BindingResult bindingResult)
@@ -41,11 +45,31 @@ public class DataResourceAPI {
         return response(dataResource.getDataResourceID());
     }
 
-    @RequestMapping(value = "/dataResource/{dataResourceID}")
+    /**
+     * Update an existing {@link DataResource}.
+     */
+    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.PUT, consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<CreatedResponse> updateDataResource(@PathVariable String dataResourceID,
+                                                              @Valid @RequestBody DataResource dataResource,
+                                                              BindingResult bindingResult) throws DataResourceException {
+        if (bindingResult.hasErrors()) {
+            throw new DataResourceValidationException(bindingResult);
+        }
+        dataResourceDAO.update(dataResource);
+        return response(dataResourceID);
+    }
+
+    /**
+     * Get an existing {@link DataResource} by its ID.
+     */
+    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.GET, consumes = APPLICATION_JSON_UTF8_VALUE)
     public DataResource getDataResourceByID(@PathVariable String dataResourceID) throws DataResourceException {
         return dataResourceDAO.getByID(dataResourceID);
     }
 
+    /**
+     * Get all existing {@link DataResource}'s
+     */
     @RequestMapping(value = "/dataResources", method = RequestMethod.GET)
     public List<DataResource> getDataResources() throws DataResourceException {
         return dataResourceDAO.getAll();
