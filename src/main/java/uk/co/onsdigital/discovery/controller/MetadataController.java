@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import uk.co.onsdigital.discovery.controller.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 import uk.co.onsdigital.discovery.validation.MetadataValidator;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.trim;
-import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.JSON_PARSE_ERROR;
+import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.JSON_PARSE_ERROR;
 
 /**
  * The Metadata editor MVC controller. Provides functionality for getting datasetIDS, getting metadata by datasetID
@@ -47,7 +47,7 @@ public class MetadataController {
     /**
      * Return the Editor form.
      */
-    @GetMapping("/")
+    @GetMapping("/metadata")
     public String getMetadataForm(Model model, HttpServletResponse response) throws MetadataEditorException {
         model.addAttribute(MODEL_KEY, new DatasetMetadata());
         model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
@@ -59,7 +59,7 @@ public class MetadataController {
      * Handle post requests to  update/create dataset metadata. If there are any validation errors then the user is taken
      * back to the editor view and each validation message will be displayed.
      */
-    @PostMapping("/")
+    @PostMapping("/metadata")
     public String metadataSubmit(@Valid DatasetMetadata datasetMetadata, Model model, BindingResult bindingResult,
                                  HttpServletResponse response)
             throws MetadataEditorException {

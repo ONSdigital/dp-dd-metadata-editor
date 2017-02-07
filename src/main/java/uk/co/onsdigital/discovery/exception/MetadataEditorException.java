@@ -1,4 +1,4 @@
-package uk.co.onsdigital.discovery.controller.exception;
+package uk.co.onsdigital.discovery.exception;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

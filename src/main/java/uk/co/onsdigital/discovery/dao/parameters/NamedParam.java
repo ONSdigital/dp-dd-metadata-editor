@@ -1,4 +1,4 @@
-package uk.co.onsdigital.discovery.dao;
+package uk.co.onsdigital.discovery.dao.parameters;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class NamedParam extends AbstractMap.SimpleEntry<String, Object> {
     /**
      * Provides a convenient way of creating {@link NamedParam}'s and adding them to a {@link List}
      */
-    static class ListBuilder {
+    public static class ListBuilder {
         private List<NamedParam> list;
 
         public ListBuilder() {

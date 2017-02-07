@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.co.onsdigital.discovery.controller.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
@@ -18,7 +18,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static uk.co.onsdigital.discovery.controller.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
+import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
 
 /**
  * Test verifying the behaviour of {@link MetadataAPI}.

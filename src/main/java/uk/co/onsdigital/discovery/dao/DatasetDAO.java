@@ -1,6 +1,6 @@
 package uk.co.onsdigital.discovery.dao;
 
-import uk.co.onsdigital.discovery.controller.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.util.List;

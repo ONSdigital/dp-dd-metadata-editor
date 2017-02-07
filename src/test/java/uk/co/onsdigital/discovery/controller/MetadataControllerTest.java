@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -52,6 +53,9 @@ public class MetadataControllerTest {
     @MockBean
     private DatasetDAO mockDatasetDAO;
 
+    @MockBean
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     @Autowired
     private MockMvc mvc;
 
@@ -73,7 +77,7 @@ public class MetadataControllerTest {
         given(this.mockDatasetDAO.getDatasetIds())
                 .willReturn(datasetIds);
 
-        ModelAndView modelAndView = this.mvc.perform(get("/")
+        ModelAndView modelAndView = this.mvc.perform(get("/metadata")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(view().name(EDITOR_VIEW))
@@ -93,7 +97,7 @@ public class MetadataControllerTest {
         given(mockDatasetDAO.getDatasetIds())
                 .willThrow(new EmptyResultDataAccessException(expectedErrorMessage, 0));
 
-        MvcResult mvcResult = this.mvc.perform(get("/")
+        MvcResult mvcResult = this.mvc.perform(get("/metadata")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
@@ -113,7 +117,7 @@ public class MetadataControllerTest {
         given(mockBindingResult.hasErrors())
                 .willReturn(true);
 
-        MvcResult mvcResult = this.mvc.perform(post("/")
+        MvcResult mvcResult = this.mvc.perform(post("/metadata")
                 .param("jsonMetadata", form.getJsonMetadata())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())

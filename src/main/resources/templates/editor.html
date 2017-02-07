@@ -42,7 +42,7 @@
 <div class="wrapper">
     <div class="col-wrap">
         <div class="col">
-            <form action="#" th:action="@{/}" th:object="${datasetMetadata}" method="post">
+            <form action="#" th:action="@{/metadata}" th:object="${datasetMetadata}" method="post">
 
                 <div class="field">
                     <div th:if="${#fields.hasErrors('datasetId')}" th:errors="*{datasetId}" class="validation-error"></div>
