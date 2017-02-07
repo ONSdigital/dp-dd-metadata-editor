@@ -16,6 +16,7 @@ import uk.co.onsdigital.discovery.model.DataResource;
 public class DataResourceController {
 
     public static final String CREATE_DATA_RESCOURCE_VIEW = "createDataResource";
+    public static final String UPDATE_DATA_RESCOURCE_VIEW = "updateDataResource";
 
     public static final String DATA_RES_MODEL_KEY = "dataResource";
 
@@ -31,6 +32,6 @@ public class DataResourceController {
     @GetMapping(value = "/dataResource/{dataResourceID}")
     public String getExistingDataResource(@PathVariable String dataResourceID, Model model) throws DataResourceException {
         model.addAttribute(DATA_RES_MODEL_KEY, dataResourceDAO.getByID(dataResourceID));
-        return CREATE_DATA_RESCOURCE_VIEW;
+        return UPDATE_DATA_RESCOURCE_VIEW;
     }
 }

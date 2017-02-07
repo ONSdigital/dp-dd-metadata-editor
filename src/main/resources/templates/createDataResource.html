@@ -31,12 +31,13 @@
     </div>
 </div>
 
-<div class="success" id="changes-successful" style="display:none;">Success</div>
+<div class="success" id="changes-successful" style="display:none;"></div>
+<div id="error-banner" style="display: none;" class="error-response"></div>
 
 <div class="wrapper">
     <div class="col-wrap">
         <div class="col">
-            <form action="#" id="data-resource-form" th:action="@{/dataResource}" th:object="${dataResource}"
+            <form action="#" id="create-data-resource-form" th:action="@{/dataResource}" th:object="${dataResource}"
                   method="post">
                 <div class="validation-error" id="errors" style="display:none;"></div>
 
