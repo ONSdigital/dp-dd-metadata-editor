@@ -9,10 +9,13 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 import uk.co.onsdigital.discovery.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
+import uk.co.onsdigital.discovery.model.DataResource;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -22,6 +25,9 @@ import static uk.co.onsdigital.discovery.exception.MetadataEditorException.Error
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.STRING_TO_INT_ERROR;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.UNEXPECTED_ERROR;
+import static uk.co.onsdigital.discovery.model.DataResource.DATA_RESOURCE_COL_NAME;
+import static uk.co.onsdigital.discovery.model.DataResource.METADATA_COL_NAME;
+import static uk.co.onsdigital.discovery.model.DataResource.TITLE_COL_NAME;
 
 /**
  * {@link DatasetDAO} impl - provides functionality for querying and updating {@link DatasetMetadata}.
@@ -66,6 +72,8 @@ public class DatasetDAOImpl implements DatasetDAO {
             "SET metadata = :metadata,  major_version = :major_version, minor_version = :minor_version," +
             " revision_notes = :revision_notes, revision_reason = :revision_reason " +
             "WHERE dimensional_data_set_id = :dimensional_data_set_id";
+
+    static final String QUERY_FOR_ALL = "SELECT * FROM dimensional_data_set";
 
     private static String getStr(ResultSet rs, String key) throws SQLException {
         return isNotEmpty(rs.getString(key)) ? rs.getString(key) : "";
@@ -119,6 +127,22 @@ public class DatasetDAOImpl implements DatasetDAO {
         } catch (DataAccessException ex) {
             throw new MetadataEditorException(DATABASE_ERROR, ex);
         }
+    }
+
+    @Override
+    public List<DatasetMetadata> getAll() throws MetadataEditorException {
+        List<DatasetMetadata> datasetMetadatas = new ArrayList<>();
+        namedParameterJdbcTemplate.query(QUERY_FOR_ALL, new HashMap<>(), (rs) -> {
+            datasetMetadatas.add(new DatasetMetadata()
+                    .setJsonMetadata(getStr(rs, JSON_METADATA_FIELD))
+                    .setMajorVersion(getStr(rs, MAJOR_VERSION_FIELD))
+                    .setMinorVersion(getStr(rs, MINOR_VERSION_FIELD))
+                    .setRevisionNotes(getStr(rs, REVISION_NOTES_FIELD))
+                    .setRevisionReason(getStr(rs, REVISION_REASON_FIELD))
+                    .setDatasetId(getStr(rs, DATASET_ID_FIELD))
+            );
+        });
+        return datasetMetadatas;
     }
 
     @Override

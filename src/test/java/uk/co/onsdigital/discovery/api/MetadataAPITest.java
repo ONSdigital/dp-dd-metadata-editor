@@ -36,7 +36,7 @@ public class MetadataAPITest {
 
         api = new MetadataAPI();
 
-        ReflectionTestUtils.setField(api, "dao", datasetDAOMock);
+        ReflectionTestUtils.setField(api, "datasetDAO", datasetDAOMock);
     }
 
     @Test

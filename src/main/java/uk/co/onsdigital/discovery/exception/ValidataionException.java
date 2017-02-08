@@ -5,11 +5,11 @@ import org.springframework.validation.BindingResult;
 /**
  * Exception impl for {@link uk.co.onsdigital.discovery.model.DataResource} validation errors.
  */
-public class DataResourceValidationException extends DataResourceException {
+public class ValidataionException extends DataResourceException {
 
     private BindingResult bindingResult;
 
-    public DataResourceValidationException(BindingResult bindingResult) {
+    public ValidataionException(BindingResult bindingResult) {
         super("DataResource validation error.");
         this.bindingResult = bindingResult;
     }

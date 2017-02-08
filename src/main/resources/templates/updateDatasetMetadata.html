@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Metadata Editor</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" th:src="@{../../js/metadata-form.js}"></script>
+    <script type="text/javascript" th:src="@{../../js/metadata-form-v2.js}"></script>
     <link rel="stylesheet" href="https://cdn.ons.gov.uk/sixteens/00c4260/css/main.css"></link>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css" type="text/css"/>
 </head>
@@ -31,36 +31,22 @@
     </div>
 </div>
 
-<div>
-    <div id="changes-successful" class="success" th:if="${updateSuccessful != null}" th:text="#{changes.successful.message(${uuid})}"></div>
-</div>
-
-<div>
-    <div id="error-banner" style="display: none;" class="error-response"></div>
-</div>
+<div class="success" id="changes-successful" style="display:none;"></div>
+<div id="error-banner" style="display: none;" class="error-response"></div>
 
 <div class="wrapper">
     <div class="col-wrap">
         <div class="col">
-            <form action="#" th:action="@{/metadata}" th:object="${datasetMetadata}" method="post">
+            <form action="#" id="update-metadata-form" th:action="@{/metadata}" th:object="${datasetMetadata}"
+                  method="post">
+                <div class="validation-error" id="errors" style="display:none;"></div>
 
                 <div class="field">
-                    <div th:if="${#fields.hasErrors('datasetId')}" id="dataset-id-err">
-                        <div th:each="err : ${#fields.errors('datasetId')}" th:text="#{${err}}" class="validation-error"></div>
-                    </div>
-
-                    <label for="dataset-select" th:text="#{'dataset.id.field.label'}"></label>
-                    <select th:field="*{datasetId}" id="dataset-select">
-                        <option value="" text=" - "/>
-                        <option th:each="id : ${dataSetList}" th:value="${id}" th:text="${id}"></option>
-                    </select>
+                    <label  for="hidden-dataset-id" th:text="#{'dataset.id.field.label'}"></label>
+                    <p id="hidden-dataset-id" th:text="*{datasetId}"></p>
                 </div>
 
                 <div class="field">
-                    <div th:if="${#fields.hasErrors('dataResource')}" id="data-resource-err">
-                        <div th:each="err : ${#fields.errors('dataResource')}" th:text="#{${err}}" class="validation-error"></div>
-                    </div>
-
                     <label for="data-res-select" th:text="#{'dataset.resource.field.label'}"></label>
                     <select th:field="*{dataResource}" id="data-res-select">
                         <option value="" text=" - "/>
@@ -70,43 +56,27 @@
                 </div>
 
                 <div class="field">
-                    <div th:if="${#fields.hasErrors('majorVersion')}" id="major-version-err">
-                        <div th:each="err : ${#fields.errors('majorVersion')}" th:text="#{${err}}" class="validation-error"></div>
-                    </div>
-
                     <label for="major-version" th:text="#{'major.version.field.label'}"></label>
                     <input type="text" id="major-version" th:field="*{majorVersion}" />
                 </div>
 
                 <div class="field" >
-                    <div th:if="${#fields.hasErrors('minorVersion')}" id="minor-version-err">
-                        <div th:each="err : ${#fields.errors('minorVersion')}" th:text="#{${err}}" class="validation-error"></div>
-                    </div>
-
                     <label for="minor-version" th:text="#{'minor.version.field.label'}"></label>
                     <input type="text" id="minor-version" th:field="*{minorVersion}" />
                 </div>
 
                 <div class="field">
-                    <div id="ss-validation-error" th:if="${#fields.hasErrors('jsonMetadata')}">
-                        <div th:each="err : ${#fields.errors('jsonMetadata')}" th:text="#{${err}}" class="validation-error"></div>
-                    </div>
                     <div id="js-json-validation-err" class="validation-error" th:value="#{'dataset.json.metadata.invalid'}" style="display: none;" th:text="#{'dataset.json.metadata.invalid'}"></div>
-
                     <label for="json-input" th:text="#{'json.metadata.field.label'}"></label>
                     <textarea id="json-input" th:field="*{jsonMetadata}" rows="20" class="json-metadata-input"/>
                 </div>
 
                 <div class="field">
-                    <div id="revision-reason-err" th:if="${#fields.hasErrors('revisionReason')}" th:errors="*{revisionReason}" class="validation-error"></div>
-
                     <label for="revision-reason" th:text="#{'revision.reason.field.label'}"></label>
                     <textarea id="revision-reason" th:field="*{revisionReason}" rows="10" class="revision-input"/>
                 </div>
 
                 <div class="field">
-                    <div id="revision-notes-err" th:if="${#fields.hasErrors('revisionNotes')}" th:errors="*{revisionNotes}" class="validation-error"></div>
-
                     <label for="revision-notes" th:text="#{'revision.notes.field.label'}"></label>
                     <textarea id="revision-notes" th:field="*{revisionNotes}" rows="10" class="revision-input"/>
                 </div>

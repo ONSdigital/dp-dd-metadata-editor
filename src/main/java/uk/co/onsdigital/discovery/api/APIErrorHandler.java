@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import uk.co.onsdigital.discovery.exception.DataResourceException;
-import uk.co.onsdigital.discovery.exception.DataResourceValidationException;
+import uk.co.onsdigital.discovery.exception.ValidataionException;
 import uk.co.onsdigital.discovery.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.model.ErrorResponse;
 import uk.co.onsdigital.discovery.validation.ValidationErrors;
@@ -26,11 +26,11 @@ public class APIErrorHandler {
     private MessageSource messageSource;
 
     /**
-     * Handle {@link DataResourceValidationException}'s
+     * Handle {@link ValidataionException}'s
      */
-    @ExceptionHandler(value = DataResourceValidationException.class)
+    @ExceptionHandler(value = ValidataionException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrors dataResValidationErr(DataResourceValidationException ex, HttpServletResponse response) {
+    public ValidationErrors dataResValidationErr(ValidataionException ex, HttpServletResponse response) {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return new ValidationErrors(ex.getBindingResult(), messageSource);
     }

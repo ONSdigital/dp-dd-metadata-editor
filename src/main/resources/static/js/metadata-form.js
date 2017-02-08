@@ -1,3 +1,9 @@
+var ERROR_FIELD_IDS = [
+    "dataset-id-err", "data-resource-err", "major-version-err",
+    "minor-version-err", "ss-validation-error", "js-json-validation-err",
+    "revision-reason-err", "revision-notes-err"
+    ];
+
 $(document).ready(function() {
     $("#dataset-select").on('change', function() {
         displayCurrentValues();
@@ -9,10 +15,11 @@ $(document).ready(function() {
             try {
                 var jsonObj = JSON.parse(jsonMetadata);
                 $('#json-input').val(JSON.stringify(jsonObj, null, '\t'));
-                $("#js-json-validation-err").hide();
+                clearErrors();
+/*                $("#js-json-validation-err").hide();
                 $("#major-version-err").hide();
                 $("#minor-version-err").hide();
-                $("#ss-validation-error").hide();
+                $("#ss-validation-error").hide();*/
             } catch (e) {
                 if ($("#ss-validation-error").is(":visible")) {
                     // do nothing.
@@ -24,11 +31,7 @@ $(document).ready(function() {
     });
 
     $("#reset-btn").click(function() {
-        $("#js-json-validation-err").hide();
-        $("#ss-validation-error").hide();
-        $("#major-version-err").hide();
-        $("#error-banner").hide();
-        $("#minor-version-err").hide();
+        clearErrors();
         displayCurrentValues();
     })
 
@@ -39,13 +42,7 @@ $(document).ready(function() {
 });
 
 function displayCurrentValues() {
-    $("#js-json-validation-err").hide();
-    $("#ss-validation-error").hide();
-    $("#changes-successful").hide();
-    $("#error-banner").hide();
-    $("#major-version-err").hide();
-    $("#minor-version-err").hide();
-
+    clearErrors();
     if ($('#dataset-select').val() != "") {
         $.ajax({
             url: "/metadata/" + $('#dataset-select').val()
@@ -69,5 +66,11 @@ function displayCurrentValues() {
         $('#minor-version').val("");
         $('#revision-reason').val("");
         $('#revision-notes').val("");
+    }
+}
+
+function clearErrors() {
+    for (var i in ERROR_FIELD_IDS) {
+        $("#" + ERROR_FIELD_IDS[i]).hide();
     }
 }

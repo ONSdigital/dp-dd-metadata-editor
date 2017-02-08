@@ -14,7 +14,7 @@ public class UUIDStringValidator implements ConstraintValidator<UUID, String> {
     @Override
     public boolean isValid(String uuid, ConstraintValidatorContext constraintValidatorContext) {
         if (isEmpty(uuid)) {
-            return false;
+            return true;
         } else {
             try {
                 java.util.UUID.fromString(uuid);

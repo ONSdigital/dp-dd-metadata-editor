@@ -24,6 +24,9 @@ public interface DatasetDAO {
      */
     DatasetMetadata getMetadataByDatasetId(UUID datasetID) throws MetadataEditorException;
 
+
+    List<DatasetMetadata> getAll() throws MetadataEditorException;
+
     /**
      * Create or update Dataset Metadata.
      *

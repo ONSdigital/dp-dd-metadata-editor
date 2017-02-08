@@ -1,13 +1,9 @@
 package uk.co.onsdigital.discovery.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.onsdigital.discovery.dao.DataResourceDAO;
 import uk.co.onsdigital.discovery.exception.DataResourceException;
-import uk.co.onsdigital.discovery.exception.DataResourceValidationException;
+import uk.co.onsdigital.discovery.exception.ValidataionException;
 import uk.co.onsdigital.discovery.model.CreatedResponse;
 import uk.co.onsdigital.discovery.model.DataResource;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import static java.text.MessageFormat.format;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -32,10 +26,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
  * REST API endpoint for Creating, updating and viewing {@link DataResource}'s.
  */
 @RestController
-public class DataResourceAPI {
+public class DataResourceAPI extends AbstractBaseAPI {
 
-    static final String DATA_RESOURCE_LOCATION = "/dataResource/{0}";
-    static final String LOCATION_LINK = "<a href=\"{0}\">{1}</a>";
+    private static final String LOCATION_URL = "/dataResource/{0}";
 
     @Autowired
     private MessageSource messageSource;
@@ -53,11 +46,11 @@ public class DataResourceAPI {
     public ResponseEntity<CreatedResponse> createDataResource(@Valid @RequestBody DataResource dataResource,
                                                               BindingResult bindingResult) throws DataResourceException {
         if (bindingResult.hasErrors()) {
-            throw new DataResourceValidationException(bindingResult);
+            throw new ValidataionException(bindingResult);
         }
 
         dataResourceDAO.create(minifyJSON(dataResource));
-        return response(dataResource.getDataResourceID());
+        return response(dataResource.getDataResourceID(), CHANGES_SUCCESS_MSG);
     }
 
     /**
@@ -68,10 +61,10 @@ public class DataResourceAPI {
                                                               @Valid @RequestBody DataResource dataResource,
                                                               BindingResult bindingResult) throws DataResourceException {
         if (bindingResult.hasErrors()) {
-            throw new DataResourceValidationException(bindingResult);
+            throw new ValidataionException(bindingResult);
         }
         dataResourceDAO.update(minifyJSON(dataResource));
-        return response(dataResourceID);
+        return response(dataResourceID, CHANGES_SUCCESS_MSG);
     }
 
     /**
@@ -90,24 +83,8 @@ public class DataResourceAPI {
         return dataResourceDAO.getAll();
     }
 
-    private ResponseEntity<CreatedResponse> response(String dataResourceID) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        String location = format(DATA_RESOURCE_LOCATION, dataResourceID);
-        httpHeaders.add("location", format(DATA_RESOURCE_LOCATION, dataResourceID));
-        String successMSG = messageSource.getMessage("data.resource.success",
-                new Object[]{format(LOCATION_LINK, location, dataResourceID)}, Locale.ENGLISH);
-        return new ResponseEntity<>(new CreatedResponse(successMSG),
-                httpHeaders, HttpStatus.CREATED);
+    @Override
+    protected String getLocationURL(String identifier) {
+        return format(LOCATION_URL, identifier);
     }
-
-    private DataResource minifyJSON(DataResource dataResource) throws DataResourceException {
-        if (StringUtils.isEmpty(dataResource.getMetadata())) return dataResource;
-        try {
-            JsonNode jNode = objectMapper.readValue(dataResource.getMetadata().trim(), JsonNode.class);
-            return dataResource.setMetadata(jNode.toString());
-        } catch (IOException e) {
-            throw new DataResourceException("Failed to minify Data resource json", e);
-        }
-    }
-
 }
