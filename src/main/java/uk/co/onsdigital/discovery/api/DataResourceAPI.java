@@ -42,7 +42,8 @@ public class DataResourceAPI extends AbstractBaseAPI {
     /**
      * Create a new {@link DataResource}
      */
-    @RequestMapping(value = "/dataResource", method = RequestMethod.POST, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/dataResource", method = RequestMethod.POST, consumes = APPLICATION_JSON_UTF8_VALUE,
+            produces = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CreatedResponse> createDataResource(@Valid @RequestBody DataResource dataResource,
                                                               BindingResult bindingResult) throws DataResourceException {
         if (bindingResult.hasErrors()) {
@@ -56,7 +57,8 @@ public class DataResourceAPI extends AbstractBaseAPI {
     /**
      * Update an existing {@link DataResource}.
      */
-    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.PUT, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.PUT,
+            consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CreatedResponse> updateDataResource(@PathVariable String dataResourceID,
                                                               @Valid @RequestBody DataResource dataResource,
                                                               BindingResult bindingResult) throws DataResourceException {
@@ -70,7 +72,8 @@ public class DataResourceAPI extends AbstractBaseAPI {
     /**
      * Get an existing {@link DataResource} by its ID.
      */
-    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.GET, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.GET,
+            consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     public DataResource getDataResourceByID(@PathVariable String dataResourceID) throws DataResourceException {
         return dataResourceDAO.getByID(dataResourceID);
     }
@@ -78,7 +81,7 @@ public class DataResourceAPI extends AbstractBaseAPI {
     /**
      * Get all existing {@link DataResource}'s
      */
-    @RequestMapping(value = "/dataResources", method = RequestMethod.GET)
+    @RequestMapping(value = "/dataResources", method = RequestMethod.GET, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     public List<DataResource> getDataResources() throws DataResourceException {
         return dataResourceDAO.getAll();
     }

@@ -34,4 +34,10 @@ public class DataResourceController {
         model.addAttribute(DATA_RES_MODEL_KEY, dataResourceDAO.getByID(dataResourceID));
         return UPDATE_DATA_RESCOURCE_VIEW;
     }
+
+    @GetMapping(value = "/dataResources")
+    public String getExistingDataResource(Model model) throws DataResourceException {
+        model.addAttribute("dataResources", dataResourceDAO.getAll());
+        return "selectDataResource";
+    }
 }

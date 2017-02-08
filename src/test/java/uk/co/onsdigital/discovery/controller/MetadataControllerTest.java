@@ -125,7 +125,7 @@ public class MetadataControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andReturn();
 
-        verify(mockDatasetDAO, never()).createOrUpdateMetadata(any(DatasetMetadata.class));
+        verify(mockDatasetDAO, never()).createOrUpdate(any(DatasetMetadata.class));
         assertThat(mvcResult.getModelAndView().getViewName(), equalTo(EDITOR_VIEW));
     }
 

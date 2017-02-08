@@ -29,6 +29,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATA_RESOURCE_FIELD;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATABASE_ERROR;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_BY_ID_QUERY;
@@ -121,7 +122,7 @@ public class DatasetDAOImplTest {
         given(jdbcTemplateMock.queryForObject(eq(DATASET_BY_ID_QUERY), eq(sqlParameterSourceMock), eq(metadataRowMapperMock)))
                 .willReturn(metadata);
 
-        DatasetMetadata result = dao.getMetadataByDatasetId(datasetId);
+        DatasetMetadata result = dao.getByDatasetId(datasetId);
 
         assertThat(result, equalTo(metadata));
         assertThat(createParameterSourceStubInvocations, equalTo(1));
@@ -132,7 +133,7 @@ public class DatasetDAOImplTest {
     @Test(expected = MetadataEditorException.class)
     public void getByIDShouldThrowMetadataEditorExceptionForDatasetIDMissing() throws Exception {
         try {
-            dao.getMetadataByDatasetId(null);
+            dao.getByDatasetId(null);
         } catch (MetadataEditorException ex) {
             assertThat(ex, equalTo(new MetadataEditorException(DATASET_ID_MISSING)));
             assertThat(createParameterSourceStubInvocations, equalTo(0));
@@ -153,7 +154,7 @@ public class DatasetDAOImplTest {
                 .toList();
 
         try {
-            dao.getMetadataByDatasetId(datasetId);
+            dao.getByDatasetId(datasetId);
         } catch (MetadataEditorException e) {
             assertThat(e, equalTo(new MetadataEditorException(DATABASE_ERROR)));
             assertThat(createParameterSourceStubInvocations, equalTo(1));
@@ -173,6 +174,7 @@ public class DatasetDAOImplTest {
                 .setMinorVersion("0")
                 .setRevisionNotes("")
                 .setRevisionReason("")
+                .setDataResource("")
                 .setJsonMetadata("");
 
         List<NamedParam> expectedParams = new NamedParam.ListBuilder()
@@ -181,10 +183,11 @@ public class DatasetDAOImplTest {
                 .addParam(MINOR_VERSION_FIELD, 0)
                 .addParam(REVISION_NOTES_FIELD, "")
                 .addParam(REVISION_REASON_FIELD, "")
+                .addParam(DATA_RESOURCE_FIELD, "")
                 .addParam(DATASET_ID_FIELD, datasetId)
                 .toList();
 
-        dao.createOrUpdateMetadata(metadata);
+        dao.createOrUpdate(metadata);
 
         assertThat(createParameterSourceStubInvocations, equalTo(1));
         assertThat(createParameterSourceStubArgs, equalTo(expectedParams));
@@ -204,6 +207,7 @@ public class DatasetDAOImplTest {
                 .setMinorVersion("0")
                 .setRevisionNotes("")
                 .setRevisionReason("")
+                .setDataResource("")
                 .setJsonMetadata("");
 
         List<NamedParam> expectedParams = new NamedParam.ListBuilder()
@@ -212,6 +216,7 @@ public class DatasetDAOImplTest {
                 .addParam(MINOR_VERSION_FIELD, 0)
                 .addParam(REVISION_NOTES_FIELD, "")
                 .addParam(REVISION_REASON_FIELD, "")
+                .addParam(DATA_RESOURCE_FIELD, "")
                 .addParam(DATASET_ID_FIELD, datasetId)
                 .toList();
 
@@ -220,7 +225,7 @@ public class DatasetDAOImplTest {
                 .when(jdbcTemplateMock).update(UPDATE_METADATA_QUERY, sqlParameterSourceMock);
 
         try {
-            dao.createOrUpdateMetadata(metadata);
+            dao.createOrUpdate(metadata);
         } catch (MetadataEditorException e) {
             assertThat(createParameterSourceStubInvocations, equalTo(1));
             assertThat(createParameterSourceStubArgs, equalTo(expectedParams));

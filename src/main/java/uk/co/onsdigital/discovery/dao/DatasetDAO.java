@@ -22,7 +22,7 @@ public interface DatasetDAO {
      * @return Metadata for the specified Dataset by its ID.
      * @throws MetadataEditorException problem getting metadata for the specified ID.
      */
-    DatasetMetadata getMetadataByDatasetId(UUID datasetID) throws MetadataEditorException;
+    DatasetMetadata getByDatasetId(UUID datasetID) throws MetadataEditorException;
 
 
     List<DatasetMetadata> getAll() throws MetadataEditorException;
@@ -33,5 +33,5 @@ public interface DatasetDAO {
      * @param form the {@link DatasetMetadata} values to create/update.
      * @throws MetadataEditorException problem updating/create metadata.
      */
-    void createOrUpdateMetadata(DatasetMetadata form) throws MetadataEditorException;
+    void createOrUpdate(DatasetMetadata form) throws MetadataEditorException;
 }

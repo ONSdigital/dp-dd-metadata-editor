@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Metadata Editor</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" th:src="@{../../js/metadata-form-v2.js}"></script>
+    <script type="text/javascript" th:src="@{../../js/metadata-form.js}"></script>
     <link rel="stylesheet" href="https://cdn.ons.gov.uk/sixteens/00c4260/css/main.css"></link>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css" type="text/css"/>
 </head>
@@ -38,12 +38,12 @@
     <div class="col-wrap">
         <div class="col">
             <form action="#" id="update-metadata-form" th:action="@{/metadata}" th:object="${datasetMetadata}"
-                  method="post">
+                  method="PUT">
                 <div class="validation-error" id="errors" style="display:none;"></div>
 
                 <div class="field">
                     <label  for="hidden-dataset-id" th:text="#{'dataset.id.field.label'}"></label>
-                    <p id="hidden-dataset-id" th:text="*{datasetId}"></p>
+                    <h3 id="hidden-dataset-id" th:text="*{datasetId}"></h3>
                 </div>
 
                 <div class="field">

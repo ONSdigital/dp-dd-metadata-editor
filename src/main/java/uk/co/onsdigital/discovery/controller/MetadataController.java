@@ -11,7 +11,6 @@ import uk.co.onsdigital.discovery.dao.DataResourceDAO;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
 import uk.co.onsdigital.discovery.exception.DataResourceException;
 import uk.co.onsdigital.discovery.exception.MetadataEditorException;
-import uk.co.onsdigital.discovery.model.DatasetMetadata;
 import uk.co.onsdigital.discovery.validation.MetadataValidator;
 
 import javax.servlet.http.HttpServletResponse;
@@ -46,29 +45,21 @@ public class MetadataController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    /**
-     * Return the Editor form.
-     */
-    @GetMapping("/metadata")
-    public String getMetadataForm(Model model, HttpServletResponse response)
-            throws MetadataEditorException, DataResourceException {
-        model.addAttribute(MODEL_KEY, new DatasetMetadata());
-        model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
-        model.addAttribute(DATA_RESOURCE_LIST, getDataResources());
-        response.setStatus(HttpStatus.OK.value());
-        return "createDatasetMetadata";
-    }
-
-
     @GetMapping("/metadata/{datasetId}")
     public String getExistingMetadata(@PathVariable String datasetId, Model model, HttpServletResponse response)
             throws MetadataEditorException, DataResourceException {
 
-        model.addAttribute(MODEL_KEY, datasetDAO.getMetadataByDatasetId(UUID.fromString(datasetId)));
+        model.addAttribute(MODEL_KEY, datasetDAO.getByDatasetId(UUID.fromString(datasetId)));
         model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
         model.addAttribute(DATA_RESOURCE_LIST, getDataResources());
         response.setStatus(HttpStatus.OK.value());
         return "updateDatasetMetadata";
+    }
+
+    @GetMapping(value = "/metadata")
+    public String getAllDatasets(Model model) throws MetadataEditorException {
+        model.addAttribute("datasets", datasetDAO.getAll());
+        return "selectDataset";
     }
 
     private List<String> getDataResources() throws DataResourceException {

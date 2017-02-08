@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Metadata Editor</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{../../js/metadata-form.js}"></script>
+    <link rel="stylesheet" href="https://cdn.ons.gov.uk/sixteens/00c4260/css/main.css"></link>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css" type="text/css"/>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="header height--9 col-wrap">
+        <div class="col col--lg-one-third col--md-one-third">
+            <img href="/">
+            <img class="main-logo" src="https://www.ons.gov.uk/assets/img/ons-logo.svg"
+                 alt="Office for National Statistics"/>
+            </img>
+        </div>
+    </div>
+</div>
+<div class="background--astral">
+    <div class="wrapper">
+        <div class="col-wrap">
+            <div class="col">
+                <h1 th:text="#{page.title}"></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="col-wrap">
+        <div class="col">
+            <h1 th:text="#{select.dataset.title}"></h1>
+            <ul>
+                <li th:each="dataResource : ${dataResources}" th:value="${dataResource.dataResourceID}">
+                    <a th:href="'/dataResource/' + ${dataResource.dataResourceID}" th:text="${dataResource.dataResourceID}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

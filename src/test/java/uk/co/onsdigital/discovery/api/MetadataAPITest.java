@@ -46,19 +46,19 @@ public class MetadataAPITest {
 
         String json = new ObjectMapper().writeValueAsString(metadata);
 
-        given(datasetDAOMock.getMetadataByDatasetId(datasetID))
+        given(datasetDAOMock.getByDatasetId(datasetID))
                 .willReturn(metadata);
 
-        DatasetMetadata result = api.getMetaData(datasetID.toString());
+        DatasetMetadata result = api.getDatasetMetadata(datasetID.toString());
 
         assertThat(result, equalTo(metadata));
-        verify(datasetDAOMock, times(1)).getMetadataByDatasetId(datasetID);
+        verify(datasetDAOMock, times(1)).getByDatasetId(datasetID);
     }
 
     @Test(expected = MetadataEditorException.class)
     public void shouldThrowMetadataEditorExceptionForDatasetIdNull() throws Exception {
         try {
-            api.getMetaData(null);
+            api.getDatasetMetadata(null);
         } catch (MetadataEditorException e) {
             verifyZeroInteractions(datasetDAOMock);
             assertThat(e.getErrorCode(), equalTo(DATASET_ID_MISSING));

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,6 +27,7 @@ import java.util.UUID;
 import static java.text.MessageFormat.format;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.trim;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.JSON_PARSE_ERROR;
 
@@ -42,40 +42,41 @@ public class MetadataAPI extends AbstractBaseAPI {
     @Autowired
     private DatasetDAO datasetDAO;
 
-    @GetMapping(value = "/metadatas")
+    /**
+     * Returns a {@link List} of all existing {@link DatasetMetadata}'s.
+     */
+    @GetMapping(value = "/metadatas", produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<DatasetMetadata> getAll() throws MetadataEditorException {
         return datasetDAO.getAll();
     }
 
-    @GetMapping(value = "/metadata/{datasetID}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+    /**
+     * Get by {@link DatasetMetadata#datasetId}
+     */
+    @GetMapping(value = "/metadata/{datasetID}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public DatasetMetadata getMetaData(@PathVariable String datasetID) throws MetadataEditorException {
+    public DatasetMetadata getDatasetMetadata(@PathVariable String datasetID) throws MetadataEditorException {
         if (StringUtils.isEmpty(datasetID)) {
             throw new MetadataEditorException(DATASET_ID_MISSING);
         }
-        return datasetDAO.getMetadataByDatasetId(UUID.fromString(datasetID));
+        return datasetDAO.getByDatasetId(UUID.fromString(datasetID));
     }
 
-    @PostMapping(value = "/metadata", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CreatedResponse> createDatasetMetadata(@Valid @RequestBody DatasetMetadata datasetMetadata,
-                                                                 BindingResult bindingResult) throws ValidataionException {
-        if (bindingResult.hasErrors()) {
-            throw new ValidataionException(bindingResult);
-        }
-        return response(datasetMetadata.getDatasetId(), CHANGES_SUCCESS_MSG);
-    }
-
-    @PutMapping(value = "/metadata/{datasetId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    /**
+     * Update an existing {@link DatasetMetadata}
+     */
+    @PutMapping(value = "/metadata/{datasetId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CreatedResponse> updateDatasetMetadata(@PathVariable String datasetId,
                                                                  @Valid @RequestBody DatasetMetadata datasetMetadata,
-                                                                 BindingResult bindingResult) throws ValidataionException {
+                                                                 BindingResult bindingResult) throws ValidataionException, MetadataEditorException {
         if (bindingResult.hasErrors()) {
             throw new ValidataionException(bindingResult);
         }
-        return response(datasetMetadata.getDatasetId(), CHANGES_SUCCESS_MSG);
+        datasetDAO.createOrUpdate(sanitise(datasetMetadata));
+        return response(datasetId, CHANGES_SUCCESS_MSG);
     }
 
     @Override

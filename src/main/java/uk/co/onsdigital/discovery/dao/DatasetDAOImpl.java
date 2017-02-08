@@ -7,9 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
-import uk.co.onsdigital.discovery.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
-import uk.co.onsdigital.discovery.model.DataResource;
+import uk.co.onsdigital.discovery.exception.MetadataEditorException;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.sql.ResultSet;
@@ -25,9 +24,6 @@ import static uk.co.onsdigital.discovery.exception.MetadataEditorException.Error
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.STRING_TO_INT_ERROR;
 import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.UNEXPECTED_ERROR;
-import static uk.co.onsdigital.discovery.model.DataResource.DATA_RESOURCE_COL_NAME;
-import static uk.co.onsdigital.discovery.model.DataResource.METADATA_COL_NAME;
-import static uk.co.onsdigital.discovery.model.DataResource.TITLE_COL_NAME;
 
 /**
  * {@link DatasetDAO} impl - provides functionality for querying and updating {@link DatasetMetadata}.
@@ -35,23 +31,37 @@ import static uk.co.onsdigital.discovery.model.DataResource.TITLE_COL_NAME;
 @Component
 public class DatasetDAOImpl implements DatasetDAO {
 
-    /** Json metadata column name. */
+    /**
+     * Json metadata column name.
+     */
     static final String JSON_METADATA_FIELD = "metadata";
 
-    /** Major version column name. */
+    /**
+     * Major version column name.
+     */
     static final String MAJOR_VERSION_FIELD = "major_version";
 
-    /** Minor version column name. */
+    /**
+     * Minor version column name.
+     */
     static final String MINOR_VERSION_FIELD = "minor_version";
 
-    /** Revision Notes column name */
+    /**
+     * Revision Notes column name
+     */
     static final String REVISION_NOTES_FIELD = "revision_notes";
 
-    /** Revision Reason column name. */
+    /**
+     * Revision Reason column name.
+     */
     static final String REVISION_REASON_FIELD = "revision_reason";
 
-    /** Dimensional Dataset ID column name. */
+    /**
+     * Dimensional Dataset ID column name.
+     */
     static final String DATASET_ID_FIELD = "dimensional_data_set_id";
+
+    static final String DATA_RESOURCE_FIELD = "data_resource";
 
     /**
      * Query for all DimensionalDataSet IDs.
@@ -62,15 +72,15 @@ public class DatasetDAOImpl implements DatasetDAO {
      * Query for a DimensionalDataSet by its ID.
      */
     static final String DATASET_BY_ID_QUERY = "SELECT " +
-            "dimensional_data_set_id, metadata, major_version, minor_version, revision_notes, revision_reason " +
-            "FROM dimensional_data_set WHERE dimensional_data_set_id = :dimensional_data_set_id";
+            "dimensional_data_set_id, metadata, major_version, minor_version, revision_notes, revision_reason, " +
+            "data_resource FROM dimensional_data_set WHERE dimensional_data_set_id = :dimensional_data_set_id";
 
     /**
      * Update statement for persisting new/updating metadata.
      */
     static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set " +
             "SET metadata = :metadata,  major_version = :major_version, minor_version = :minor_version," +
-            " revision_notes = :revision_notes, revision_reason = :revision_reason " +
+            " revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource " +
             "WHERE dimensional_data_set_id = :dimensional_data_set_id";
 
     static final String QUERY_FOR_ALL = "SELECT * FROM dimensional_data_set";
@@ -92,6 +102,7 @@ public class DatasetDAOImpl implements DatasetDAO {
                     .setMinorVersion(getStr(rs, MINOR_VERSION_FIELD))
                     .setRevisionNotes(getStr(rs, REVISION_NOTES_FIELD))
                     .setRevisionReason(getStr(rs, REVISION_REASON_FIELD))
+                    .setDataResource(getStr(rs, DATA_RESOURCE_FIELD))
                     .setDatasetId(getStr(rs, DATASET_ID_FIELD));
 
 
@@ -114,7 +125,7 @@ public class DatasetDAOImpl implements DatasetDAO {
     }
 
     @Override
-    public DatasetMetadata getMetadataByDatasetId(UUID datasetID) throws MetadataEditorException {
+    public DatasetMetadata getByDatasetId(UUID datasetID) throws MetadataEditorException {
         if (datasetID == null) {
             throw new MetadataEditorException(DATASET_ID_MISSING);
         }
@@ -139,6 +150,7 @@ public class DatasetDAOImpl implements DatasetDAO {
                     .setMinorVersion(getStr(rs, MINOR_VERSION_FIELD))
                     .setRevisionNotes(getStr(rs, REVISION_NOTES_FIELD))
                     .setRevisionReason(getStr(rs, REVISION_REASON_FIELD))
+                    .setDataResource(getStr(rs, DATA_RESOURCE_FIELD))
                     .setDatasetId(getStr(rs, DATASET_ID_FIELD))
             );
         });
@@ -146,7 +158,7 @@ public class DatasetDAOImpl implements DatasetDAO {
     }
 
     @Override
-    public void createOrUpdateMetadata(DatasetMetadata form) throws MetadataEditorException {
+    public void createOrUpdate(DatasetMetadata form) throws MetadataEditorException {
         try {
             SqlParameterSource sqlParameterSource = createParameterSource.apply(
                     new NamedParam.ListBuilder()
@@ -155,6 +167,7 @@ public class DatasetDAOImpl implements DatasetDAO {
                             .addParam(MINOR_VERSION_FIELD, Integer.parseInt(form.getMinorVersion()))
                             .addParam(REVISION_NOTES_FIELD, form.getRevisionNotes())
                             .addParam(REVISION_REASON_FIELD, form.getRevisionReason())
+                            .addParam(DATA_RESOURCE_FIELD, form.getDataResource())
                             .addParam(DATASET_ID_FIELD, UUID.fromString(form.getDatasetId()))
                             .toList()
             );
