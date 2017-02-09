@@ -37,6 +37,7 @@
 <div class="wrapper">
     <div class="col-wrap">
         <div class="col">
+            <div><a href="/" th:text="#{home.link}"></a></div>
             <form action="#" id="update-metadata-form" th:action="@{/metadata}" th:object="${datasetMetadata}"
                   method="PUT">
                 <div class="validation-error" id="errors" style="display:none;"></div>
@@ -50,8 +51,7 @@
                     <label for="data-res-select" th:text="#{'dataset.resource.field.label'}"></label>
                     <select th:field="*{dataResource}" id="data-res-select">
                         <option value="" text=" - "/>
-                        <option th:each="dataResource : ${dataResources}" th:value="${dataResource}"
-                                th:text="${dataResource}"></option>
+                        <option th:each="dataResource : ${dataResources}" th:value="${dataResource}" th:text="${dataResource}"></option>
                     </select>
                 </div>
 
