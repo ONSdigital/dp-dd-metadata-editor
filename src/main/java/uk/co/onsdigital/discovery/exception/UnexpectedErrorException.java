@@ -8,9 +8,10 @@ import static java.text.MessageFormat.format;
 /**
  * Exception type for Metadata Editor errors.
  */
-public class MetadataEditorException extends Exception {
+public class UnexpectedErrorException extends Exception {
 
     private static final String MSG_FMT = "{0} - {1} : {2}";
+    private static final String MSG_FMT_2 = "{0}: {1} {2} {3}";
 
     /**
      * Types for the different exception scenarios when calling the Editor.
@@ -31,6 +32,9 @@ public class MetadataEditorException extends Exception {
          */
         DATASET_ID_MISSING("DatasetID was null or empty"),
 
+
+        INVALID_DATASET_UUID("DatasetID was not valid UUID"),
+
         /**
          * For {@link NumberFormatException} when dealing with major/minor versions.
          */
@@ -46,28 +50,37 @@ public class MetadataEditorException extends Exception {
         ErrorCode(String details) {
             this.details = details;
         }
+
+        public String getDetails() {
+            return details;
+        }
     }
 
     private ErrorCode errorCode;
 
     /**
-     * Construct a new {@link MetadataEditorException}.
+     * Construct a new {@link UnexpectedErrorException}.
      *
      * @param errorCode {@link ErrorCode} to specify the exception scenario.
      */
-    public MetadataEditorException(ErrorCode errorCode) {
+    public UnexpectedErrorException(ErrorCode errorCode) {
         super(errorCode.details);
         this.errorCode = errorCode;
     }
 
     /**
-     * Construct a new {@link MetadataEditorException}.
+     * Construct a new {@link UnexpectedErrorException}.
      *
      * @param errorCode {@link ErrorCode} to specify the exception scenario.
      * @param ex        the original exception.
      */
-    public MetadataEditorException(ErrorCode errorCode, Exception ex) {
+    public UnexpectedErrorException(ErrorCode errorCode, Exception ex) {
         super(format(MSG_FMT, errorCode, ex.getClass().getSimpleName(), ex.getMessage()));
+        this.errorCode = errorCode;
+    }
+
+    public UnexpectedErrorException(ErrorCode errorCode, String details, Exception ex) {
+        super(format(MSG_FMT_2, errorCode, details, ex.getClass().getSimpleName(), ex.getMessage()));
         this.errorCode = errorCode;
     }
 
@@ -93,7 +106,7 @@ public class MetadataEditorException extends Exception {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        MetadataEditorException that = (MetadataEditorException) o;
+        UnexpectedErrorException that = (UnexpectedErrorException) o;
 
         return new EqualsBuilder()
                 .append(getErrorCode(), that.getErrorCode())

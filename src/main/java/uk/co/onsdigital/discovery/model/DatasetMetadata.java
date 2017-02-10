@@ -2,16 +2,30 @@ package uk.co.onsdigital.discovery.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
+import uk.co.onsdigital.discovery.validation.annotation.*;
 
 /**
  * Model representing the Metadata fields of the DinmensionalDataSet table.
  */
 public class DatasetMetadata {
 
+    @JSON(message = "dataset.json.metadata.invalid")
     private String jsonMetadata;
+
+    @NotEmpty(message = "dataset.id.empty")
+    @UUID
     private String datasetId;
+
+    @DataResourceID
+    private String dataResource;
+
+    @NotEmpty(message = "dataset.major.version.empty")
     private String majorVersion;
+
+    @NotEmpty(message = "dataset.minor.version.empty")
     private String minorVersion;
+
     private String revisionNotes;
     private String revisionReason;
 
@@ -69,21 +83,31 @@ public class DatasetMetadata {
         return this;
     }
 
+    public String getDataResource() {
+        return dataResource;
+    }
+
+    public DatasetMetadata setDataResource(String dataResource) {
+        this.dataResource = dataResource;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        DatasetMetadata metadata = (DatasetMetadata) o;
+        DatasetMetadata that = (DatasetMetadata) o;
 
         return new EqualsBuilder()
-                .append(getJsonMetadata(), metadata.getJsonMetadata())
-                .append(getDatasetId(), metadata.getDatasetId())
-                .append(getMajorVersion(), metadata.getMajorVersion())
-                .append(getMinorVersion(), metadata.getMinorVersion())
-                .append(getRevisionNotes(), metadata.getRevisionNotes())
-                .append(getRevisionReason(), metadata.getRevisionReason())
+                .append(getJsonMetadata(), that.getJsonMetadata())
+                .append(getDatasetId(), that.getDatasetId())
+                .append(getDataResource(), that.getDataResource())
+                .append(getMajorVersion(), that.getMajorVersion())
+                .append(getMinorVersion(), that.getMinorVersion())
+                .append(getRevisionNotes(), that.getRevisionNotes())
+                .append(getRevisionReason(), that.getRevisionReason())
                 .isEquals();
     }
 
@@ -92,6 +116,7 @@ public class DatasetMetadata {
         return new HashCodeBuilder(17, 37)
                 .append(getJsonMetadata())
                 .append(getDatasetId())
+                .append(getDataResource())
                 .append(getMajorVersion())
                 .append(getMinorVersion())
                 .append(getRevisionNotes())

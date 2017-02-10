@@ -31,56 +31,53 @@
     </div>
 </div>
 
-<div>
-    <div id="changes-successful" class="success" th:if="${updateSuccessful != null}" th:text="#{changes.successful.message(${uuid})}"></div>
-</div>
-
-<div>
-    <div id="error-banner" style="display: none;" class="error-response"></div>
-</div>
+<div class="success" id="changes-successful" style="display:none;"></div>
+<div id="error-banner" style="display: none;" class="error-response"></div>
 
 <div class="wrapper">
     <div class="col-wrap">
         <div class="col">
-            <form action="#" th:action="@{/metadata}" th:object="${datasetMetadata}" method="post">
+            <div><a href="/" th:text="#{home.link}"></a></div>
+            <form action="#" id="update-metadata-form" th:action="@{/metadata}" th:object="${datasetMetadata}"
+                  method="PUT">
+                <div class="validation-error" id="errors" style="display:none;"></div>
 
                 <div class="field">
-                    <div th:if="${#fields.hasErrors('datasetId')}" th:errors="*{datasetId}" class="validation-error"></div>
-                    <label for="dataset-select" th:text="#{'dataset.id.field.label'}"></label>
-                    <select th:field="*{datasetId}" id="dataset-select">
+                    <label  for="hidden-dataset-id" th:text="#{'dataset.id.field.label'}"></label>
+                    <h3 id="hidden-dataset-id" th:text="*{datasetId}"></h3>
+                </div>
+
+                <div class="field">
+                    <label for="data-res-select" th:text="#{'dataset.resource.field.label'}"></label>
+                    <select th:field="*{dataResource}" id="data-res-select">
                         <option value="" text=" - "/>
-                        <option th:each="id : ${dataSetList}" th:value="${id}" th:text="${id}"></option>
+                        <option th:each="dataResource : ${dataResources}" th:value="${dataResource}" th:text="${dataResource}"></option>
                     </select>
                 </div>
 
                 <div class="field">
-                    <div id="major-version-err" th:if="${#fields.hasErrors('majorVersion')}" th:errors="*{majorVersion}" class="validation-error"></div>
                     <label for="major-version" th:text="#{'major.version.field.label'}"></label>
                     <input type="text" id="major-version" th:field="*{majorVersion}" />
                 </div>
 
-                <div class="field">
-                    <div id="minor-version-err" th:if="${#fields.hasErrors('minorVersion')}" th:errors="*{minorVersion}" class="validation-error"></div>
+                <div class="field" >
                     <label for="minor-version" th:text="#{'minor.version.field.label'}"></label>
                     <input type="text" id="minor-version" th:field="*{minorVersion}" />
                 </div>
 
                 <div class="field">
-                    <label for="json-input" th:text="#{'json.metadata.field.label'}"></label>
-                    <div id="ss-validation-error" th:if="${#fields.hasErrors('jsonMetadata')}" th:errors="*{jsonMetadata}" class="validation-error"></div>
                     <div id="js-json-validation-err" class="validation-error" th:value="#{'dataset.json.metadata.invalid'}" style="display: none;" th:text="#{'dataset.json.metadata.invalid'}"></div>
+                    <label for="json-input" th:text="#{'json.metadata.field.label'}"></label>
                     <textarea id="json-input" th:field="*{jsonMetadata}" rows="20" class="json-metadata-input"/>
                 </div>
 
                 <div class="field">
                     <label for="revision-reason" th:text="#{'revision.reason.field.label'}"></label>
-                    <div id="revision-reason-err" th:if="${#fields.hasErrors('revisionReason')}" th:errors="*{revisionReason}" class="validation-error"></div>
                     <textarea id="revision-reason" th:field="*{revisionReason}" rows="10" class="revision-input"/>
                 </div>
 
                 <div class="field">
                     <label for="revision-notes" th:text="#{'revision.notes.field.label'}"></label>
-                    <div id="revision-notes-err" th:if="${#fields.hasErrors('revisionNotes')}" th:errors="*{revisionNotes}" class="validation-error"></div>
                     <textarea id="revision-notes" th:field="*{revisionNotes}" rows="10" class="revision-input"/>
                 </div>
 

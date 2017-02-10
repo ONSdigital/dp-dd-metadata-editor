@@ -1,24 +1,37 @@
-### Create a data resource.
-curl \
--H "Content-Type: application/json" \
--i \
--X POST \
--d '{"title":"Test Data Resource 1.0","dataResourceID":"AF2501010","metadata":"{ \"name\" : \"Test Data Resource 1.0\"}"}' \
-http://localhost:23000/dataResource
+### Example curl commands for the /dataResource &  /dataResources API.
 
+### Create a data resource.
+    curl \
+    -H "Content-Type: application/json" \
+    -i \
+    -X POST \
+    -d '{
+      "dataResourceID": "AAA123",
+      "title": "Dave Test Resource 2.0",
+      "metadata": "{\"Name\":\"Dave Test Resource 1.0\"}"
+    }' \
+    http://localhost:23000/dataResource | jq "."
 
 ### Update a data resource.
-curl \
--H "Content-Type: application/json" \
--i \
--X PUT \
--d '{"title":"Test Data Resource 2.0","dataResourceID":"AF2501010","metadata":"{ \"name\" : \"Test Data Resource 2.0\"}"}' \
-http://localhost:23000/dataResource/AF2501010
-
+    curl \
+    -H "Content-Type: application/json" \
+    -i \
+    -X PUT \
+    -d '{
+      "dataResourceID": "AAA123",
+      "title": "Dave Test Resource 3.0",
+      "metadata": "{\"Name\":\"Dave Test Resource 1.0\"}"
+    }' \
+    http://localhost:23000/dataResource/AAA123
 
 ### Get all data resources.
-curl -X GET http://localhost:23000/dataResources
+    curl \
+    -X GET \
+    -H "Content-Type: application/json" \
+    http://localhost:23000/dataResources | jq "."
 
-
-### Get all data resources.
-curl -H "Content-Type: application/json" -X GET http://localhost:23000/dataResources
+### Get a specific data resources.
+    curl \
+    -H "Content-Type: application/json" \
+    -X GET \
+    http://localhost:23000/dataResource/ABCD1234 | jq "."

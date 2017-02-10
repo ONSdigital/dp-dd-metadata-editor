@@ -4,19 +4,33 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class CreatedResponse {
+public class ValidationError {
 
+    private String code;
     private String message;
 
-    public CreatedResponse(String message) {
+    public ValidationError(String code, String message) {
+        this.code = code;
         this.message = message;
     }
 
-    public CreatedResponse() {
+    public ValidationError() {
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
@@ -25,16 +39,18 @@ public class CreatedResponse {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CreatedResponse that = (CreatedResponse) o;
+        ValidationError error = (ValidationError) o;
 
         return new EqualsBuilder()
-                .append(getMessage(), that.getMessage())
+                .append(getCode(), error.getCode())
+                .append(getMessage(), error.getMessage())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(getCode())
                 .append(getMessage())
                 .toHashCode();
     }
@@ -42,6 +58,7 @@ public class CreatedResponse {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("code", code)
                 .append("message", message)
                 .toString();
     }

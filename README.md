@@ -27,14 +27,18 @@ Dataset metadata can be created / updated using the following URLs:
 * `localhost:23000/metadata` - Form allowing you to create/update dimensional dataset metadata.
 * `localhost:23000/metadata/{datasetID}` - Returns a the dataset metadata as JSON.
 
+Examples of how `curl` the API can be found in `/dp-dd-metadata-editor/src/test/resources/metadata-curl-cmds.txt`
+
 #### Data Resources
 Data resources can be viewed/created/updated with the following URLs:
 * `localhost:23000/dataResource` - Form to create a new Data Resource. 
 * `localhost:23000/dataResources` - Returns a JSON response listing all the current data resources. 
-* `localhost:23000/dataResource/{dataResourceID}` - Form to update an existing data resource.
+* `localhost:23000/dataResource/{dataResourceID}` - Form to update an existing data resource.`
+
+Examples of how `curl` the API can be found in `dp-dd-metadata-editor/src/test/resources/data-resource-curl-commands.txt
 
 Additionally data resources can be viewed/created/updated directly via the API. 
-See `dp-dd-metadata-editor/src/test/resources/data-resource-curl-commands.txt` for examples.
+See `/dp-dd-metadata-editor/src/test/resources/data-resource-curl-commands.txt` for examples.
 
 #### Configuration
 

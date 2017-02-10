@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UUID {
 
-    String message() default "string.uuid.validation.err";
+    String message() default "invalid.uuid.string";
 
     Class<?>[] groups() default {};
 

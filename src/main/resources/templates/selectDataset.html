@@ -33,16 +33,21 @@
 
 <div class="wrapper">
     <div class="col-wrap">
-        <div><a href="/" th:text="#{home.link}"></a></div>
         <div class="col">
-            <p>
-                <div th:if="${errorDetails != null}" class="errorDetails" th:text="#{unexpected.error.details(${errorDetails})}"/>
-                <div th:if="${easterEgg != null}" class="easterEgg"><img th:src="@{${easterEgg}}"/></div>
-                <div th:if="${errorStackTrace != null}"  class="errorStackTrace" th:text="#{unexpected.error.details(${errorStackTrace})}"/>
-            </p>
+            <div><a href="/" th:text="#{home.link}"></a></div>
+            <h1 th:text="#{select.dataset.title}"></h1>
+
+            <h3 th:if="${#lists.isEmpty(datasets)}" th:text="#{no.datasets}"/>
+
+            <ul  th:if="${!#lists.isEmpty(datasets)}">
+                <li th:each="dataset : ${datasets}" th:value="${dataset.datasetId}">
+                    <a th:href="'/metadata/' + ${dataset.datasetId}" th:text="${dataset.datasetId}"></a>
+                </li>
+            </ul>
+
+
         </div>
     </div>
-    <div><a href="/" th:text="#{home.link}"></a></div>
 </div>
 
 </body>

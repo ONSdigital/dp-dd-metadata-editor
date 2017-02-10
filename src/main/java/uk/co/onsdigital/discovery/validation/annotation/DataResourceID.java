@@ -8,16 +8,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Fields annotated with this must be valid JSON strings.
- */
 @Documented
-@Constraint(validatedBy = JSONStringValidator.class)
+@Constraint(validatedBy = DataResourceIDValidator.class)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JSON {
+public @interface DataResourceID {
 
-    String message() default "invalid.json.string";
+    String message() default "dataset.data.resource.empty";
 
     Class<?>[] groups() default {};
 

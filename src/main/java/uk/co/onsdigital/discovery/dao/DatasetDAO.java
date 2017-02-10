@@ -1,6 +1,6 @@
 package uk.co.onsdigital.discovery.dao;
 
-import uk.co.onsdigital.discovery.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.util.List;
@@ -13,22 +13,25 @@ public interface DatasetDAO {
 
     /**
      * @return a list of all DatasetIDs.
-     * @throws MetadataEditorException problem getting the DatasetIDs.
+     * @throws UnexpectedErrorException problem getting the DatasetIDs.
      */
-    List<String> getDatasetIds() throws MetadataEditorException;
+    List<String> getDatasetIds() throws UnexpectedErrorException;
 
     /**
      * @param datasetID the datasetID to query for.
      * @return Metadata for the specified Dataset by its ID.
-     * @throws MetadataEditorException problem getting metadata for the specified ID.
+     * @throws UnexpectedErrorException problem getting metadata for the specified ID.
      */
-    DatasetMetadata getMetadataByDatasetId(UUID datasetID) throws MetadataEditorException;
+    DatasetMetadata getByDatasetId(UUID datasetID) throws UnexpectedErrorException;
+
+
+    List<DatasetMetadata> getAll() throws UnexpectedErrorException;
 
     /**
      * Create or update Dataset Metadata.
      *
      * @param form the {@link DatasetMetadata} values to create/update.
-     * @throws MetadataEditorException problem updating/create metadata.
+     * @throws UnexpectedErrorException problem updating/create metadata.
      */
-    void createOrUpdateMetadata(DatasetMetadata form) throws MetadataEditorException;
+    void createOrUpdate(DatasetMetadata form) throws UnexpectedErrorException;
 }

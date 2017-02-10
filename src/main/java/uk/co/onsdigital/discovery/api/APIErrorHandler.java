@@ -6,15 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import uk.co.onsdigital.discovery.exception.DataResourceException;
-import uk.co.onsdigital.discovery.exception.DataResourceValidationException;
-import uk.co.onsdigital.discovery.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.BadRequestException;
+import uk.co.onsdigital.discovery.exception.ValidationException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.model.ErrorResponse;
-import uk.co.onsdigital.discovery.validation.ValidationErrors;
+import uk.co.onsdigital.discovery.model.ValidationErrorsResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * Error handler for REST API.
@@ -26,22 +26,26 @@ public class APIErrorHandler {
     private MessageSource messageSource;
 
     /**
-     * Handle {@link DataResourceValidationException}'s
+     * Handle {@link ValidationException}'s
      */
-    @ExceptionHandler(value = DataResourceValidationException.class)
+    @ExceptionHandler(value = ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrors dataResValidationErr(DataResourceValidationException ex, HttpServletResponse response) {
+    public ValidationErrorsResponse dataResValidationErr(ValidationException ex, HttpServletResponse response) {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        return new ValidationErrors(ex.getBindingResult(), messageSource);
+        return new ValidationErrorsResponse(ex.getBindingResult(), messageSource);
     }
 
-    /**
-     * Handle {@link DataResourceException}'s
-     */
-    @ExceptionHandler(value = {DataResourceException.class, MetadataEditorException.class})
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleDataResourceError(DataResourceException ex, HttpServletResponse response) {
-        response.setStatus(INTERNAL_SERVER_ERROR.value());
-        return new ErrorResponse(ex, INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(value = BadRequestException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ErrorResponse handleDataResourceError(BadRequestException ex, HttpServletResponse response) {
+        response.setStatus(BAD_REQUEST.value());
+        return new ErrorResponse(ex, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = UnexpectedErrorException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handlerMetadataError(UnexpectedErrorException ex, HttpServletResponse response) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

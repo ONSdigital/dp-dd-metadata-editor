@@ -7,13 +7,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParameterFactory;
-import uk.co.onsdigital.discovery.exception.DataResourceException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.model.DataResource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATABASE_ERROR;
 import static uk.co.onsdigital.discovery.model.DataResource.DATA_RESOURCE_COL_NAME;
 import static uk.co.onsdigital.discovery.model.DataResource.METADATA_COL_NAME;
 import static uk.co.onsdigital.discovery.model.DataResource.TITLE_COL_NAME;
@@ -43,7 +44,7 @@ public class DataResourceDAOImpl implements DataResourceDAO {
                     .setMetadata(rs.getString(METADATA_COL_NAME));
 
     @Override
-    public void create(DataResource dataResource) throws DataResourceException {
+    public void create(DataResource dataResource) throws UnexpectedErrorException {
         try {
             NamedParam.ListBuilder builder = new NamedParam.ListBuilder()
                     .addParam(DATA_RESOURCE_FIELD, dataResource.getDataResourceID())
@@ -52,12 +53,12 @@ public class DataResourceDAOImpl implements DataResourceDAO {
             jdbcTemplate.update(CREATE_DATA_RESOURCE_SQL, namedParameterFactory.create(builder));
         } catch (DataAccessException ex) {
             ex.printStackTrace();
-            throw new DataResourceException("Error creating Data Resource", ex);
+            throw new UnexpectedErrorException(DATABASE_ERROR, ex);
         }
     }
 
     @Override
-    public void update(DataResource dataResource) throws DataResourceException {
+    public void update(DataResource dataResource) throws UnexpectedErrorException {
         try {
             NamedParam.ListBuilder builder = new NamedParam.ListBuilder()
                     .addParam(DATA_RESOURCE_FIELD, dataResource.getDataResourceID())
@@ -66,24 +67,24 @@ public class DataResourceDAOImpl implements DataResourceDAO {
             jdbcTemplate.update(UPDATE_DATA_RESOURCE_SQL, namedParameterFactory.create(builder));
         } catch (DataAccessException ex) {
             ex.printStackTrace();
-            throw new DataResourceException("Error updating Data Resource", ex);
+            throw new UnexpectedErrorException(DATABASE_ERROR, "Error updating Data Resource", ex);
         }
     }
 
     @Override
-    public DataResource getByID(String dataResourceID) throws DataResourceException {
+    public DataResource getByID(String dataResourceID) throws UnexpectedErrorException {
         try {
             NamedParam.ListBuilder builder = new NamedParam.ListBuilder()
                     .addParam(DATA_RESOURCE_FIELD, dataResourceID);
             return jdbcTemplate.queryForObject(QUERY_BY_ID, namedParameterFactory.create(builder), dataResourceRowMapper);
         } catch (DataAccessException ex) {
             ex.printStackTrace();
-            throw new DataResourceException("Error getting all Data Resource by ID", ex);
+            throw new UnexpectedErrorException(DATABASE_ERROR, "Error getting all Data Resource by ID", ex);
         }
     }
 
     @Override
-    public List<DataResource> getAll() throws DataResourceException {
+    public List<DataResource> getAll() throws UnexpectedErrorException {
         try {
             List<DataResource> resources = new ArrayList<>();
             jdbcTemplate.query(QUERY_ALL_DATA_RESOURCES, new HashMap<>(), (rs) -> {
@@ -95,7 +96,7 @@ public class DataResourceDAOImpl implements DataResourceDAO {
             return resources;
         } catch (DataAccessException ex) {
             ex.printStackTrace();
-            throw new DataResourceException("Error getting Data Resources", ex);
+            throw new UnexpectedErrorException(DATABASE_ERROR, "Error getting Data Resources", ex);
         }
     }
 }
