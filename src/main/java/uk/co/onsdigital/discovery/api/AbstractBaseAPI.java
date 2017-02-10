@@ -20,9 +20,9 @@ import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.Erro
 
 public abstract class AbstractBaseAPI {
 
-    protected static final String LOCATION_LINK = "<a href=\"{0}\">{1}</a>";
-    protected static final String LOCATION_HEADER_KEY = "location";
-    protected static final String CHANGES_SUCCESS_MSG = "changed.success.message";
+    public static final String LOCATION_LINK = "<a href=\"{0}\">{1}</a>";
+    public static final String LOCATION_HEADER_KEY = "location";
+    public static final String CHANGES_SUCCESS_MSG = "changed.success.message";
 
     @Autowired
     protected MessageSource messageSource;

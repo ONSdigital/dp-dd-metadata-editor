@@ -1,6 +1,5 @@
 package uk.co.onsdigital.discovery.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParameterFactory;
 import uk.co.onsdigital.discovery.exception.BadRequestException;
@@ -24,7 +20,6 @@ import uk.co.onsdigital.discovery.model.ErrorResponse;
 import uk.co.onsdigital.discovery.model.ValidationError;
 import uk.co.onsdigital.discovery.model.ValidationErrorsResponse;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,13 +40,7 @@ import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.Erro
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MetadataAPI.class)
-public class MetadataAPITest {
-
-    @MockBean
-    private Model mockModel;
-
-    @MockBean
-    private BindingResult mockBindingResult;
+public class MetadataAPITest extends AbstractAPITest {
 
     @MockBean
     private DatasetDAO datasetDAOMock;
@@ -61,12 +50,6 @@ public class MetadataAPITest {
 
     @Autowired
     private NamedParameterFactory namedParameterFactory;
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private MetadataAPI api;
     private List<DatasetMetadata> metadataList;
@@ -177,9 +160,5 @@ public class MetadataAPITest {
         ValidationErrorsResponse actual = parseJSON(mvcResult, ValidationErrorsResponse.class);
         assertThat(actual, equalTo(expectedResponse));
         verifyZeroInteractions(datasetDAOMock);
-    }
-
-    private <T> T parseJSON(MvcResult result, Class<T> type) throws IOException {
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), type);
     }
 }

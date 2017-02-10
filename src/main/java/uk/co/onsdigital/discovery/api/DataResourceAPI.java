@@ -40,13 +40,27 @@ public class DataResourceAPI extends AbstractBaseAPI {
     private ObjectMapper objectMapper;
 
     /**
+     * Get all existing {@link DataResource}'s
+     */
+    @RequestMapping(value = "/dataResources", method = RequestMethod.GET, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
+    public List<DataResource> getDataResources() throws UnexpectedErrorException  {
+        return dataResourceDAO.getAll();
+    }
+
+    /**
+     * Get an existing {@link DataResource} by its ID.
+     */
+    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.GET, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
+    public DataResource getDataResourceByID(@PathVariable String dataResourceID) throws UnexpectedErrorException  {
+        return dataResourceDAO.getByID(dataResourceID);
+    }
+
+    /**
      * Create a new {@link DataResource}
      */
-    @RequestMapping(value = "/dataResource", method = RequestMethod.POST, consumes = APPLICATION_JSON_UTF8_VALUE,
-            produces = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<CreatedResponse> createDataResource(@Valid @RequestBody DataResource dataResource,
-                                                              BindingResult bindingResult) throws
-            ValidationException, UnexpectedErrorException {
+    @RequestMapping(value = "/dataResource", method = RequestMethod.POST, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<CreatedResponse> createDataResource(@Valid @RequestBody DataResource dataResource, BindingResult bindingResult)
+            throws ValidationException, UnexpectedErrorException {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }
@@ -58,11 +72,8 @@ public class DataResourceAPI extends AbstractBaseAPI {
     /**
      * Update an existing {@link DataResource}.
      */
-    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.PUT,
-            consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<CreatedResponse> updateDataResource(@PathVariable String dataResourceID,
-                                                              @Valid @RequestBody DataResource dataResource,
-                                                              BindingResult bindingResult)
+    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.PUT, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<CreatedResponse> updateDataResource(@PathVariable String dataResourceID, @Valid @RequestBody DataResource dataResource, BindingResult bindingResult)
             throws ValidationException, UnexpectedErrorException {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
@@ -71,22 +82,6 @@ public class DataResourceAPI extends AbstractBaseAPI {
         return createSuccessResponse(dataResourceID, CHANGES_SUCCESS_MSG);
     }
 
-    /**
-     * Get an existing {@link DataResource} by its ID.
-     */
-    @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.GET,
-            consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
-    public DataResource getDataResourceByID(@PathVariable String dataResourceID) throws UnexpectedErrorException  {
-        return dataResourceDAO.getByID(dataResourceID);
-    }
-
-    /**
-     * Get all existing {@link DataResource}'s
-     */
-    @RequestMapping(value = "/dataResources", method = RequestMethod.GET, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
-    public List<DataResource> getDataResources() throws UnexpectedErrorException  {
-        return dataResourceDAO.getAll();
-    }
 
     @Override
     protected String getLocationURL(String identifier) {
