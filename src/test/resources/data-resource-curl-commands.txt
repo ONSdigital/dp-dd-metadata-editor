@@ -21,4 +21,4 @@ curl -X GET http://localhost:23000/dataResources
 
 
 ### Get all data resources.
-curl -H "Content-Type: application/json" -X GET http://localhost:23000/dataResources
+curl -H "Content-Type: application/json" -X GET http://localhost:23000/metadata/12345

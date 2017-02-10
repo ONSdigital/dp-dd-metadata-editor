@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.onsdigital.discovery.dao.DataResourceDAO;
-import uk.co.onsdigital.discovery.exception.DataResourceException;
-import uk.co.onsdigital.discovery.exception.ValidataionException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
+import uk.co.onsdigital.discovery.exception.ValidationException;
 import uk.co.onsdigital.discovery.model.CreatedResponse;
 import uk.co.onsdigital.discovery.model.DataResource;
 
@@ -45,13 +45,14 @@ public class DataResourceAPI extends AbstractBaseAPI {
     @RequestMapping(value = "/dataResource", method = RequestMethod.POST, consumes = APPLICATION_JSON_UTF8_VALUE,
             produces = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CreatedResponse> createDataResource(@Valid @RequestBody DataResource dataResource,
-                                                              BindingResult bindingResult) throws DataResourceException {
+                                                              BindingResult bindingResult) throws
+            ValidationException, UnexpectedErrorException {
         if (bindingResult.hasErrors()) {
-            throw new ValidataionException(bindingResult);
+            throw new ValidationException(bindingResult);
         }
 
         dataResourceDAO.create(minifyJSON(dataResource));
-        return response(dataResource.getDataResourceID(), CHANGES_SUCCESS_MSG);
+        return createSuccessResponse(dataResource.getDataResourceID(), CHANGES_SUCCESS_MSG);
     }
 
     /**
@@ -61,12 +62,13 @@ public class DataResourceAPI extends AbstractBaseAPI {
             consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CreatedResponse> updateDataResource(@PathVariable String dataResourceID,
                                                               @Valid @RequestBody DataResource dataResource,
-                                                              BindingResult bindingResult) throws DataResourceException {
+                                                              BindingResult bindingResult)
+            throws ValidationException, UnexpectedErrorException {
         if (bindingResult.hasErrors()) {
-            throw new ValidataionException(bindingResult);
+            throw new ValidationException(bindingResult);
         }
         dataResourceDAO.update(minifyJSON(dataResource));
-        return response(dataResourceID, CHANGES_SUCCESS_MSG);
+        return createSuccessResponse(dataResourceID, CHANGES_SUCCESS_MSG);
     }
 
     /**
@@ -74,7 +76,7 @@ public class DataResourceAPI extends AbstractBaseAPI {
      */
     @RequestMapping(value = "/dataResource/{dataResourceID}", method = RequestMethod.GET,
             consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
-    public DataResource getDataResourceByID(@PathVariable String dataResourceID) throws DataResourceException {
+    public DataResource getDataResourceByID(@PathVariable String dataResourceID) throws UnexpectedErrorException  {
         return dataResourceDAO.getByID(dataResourceID);
     }
 
@@ -82,7 +84,7 @@ public class DataResourceAPI extends AbstractBaseAPI {
      * Get all existing {@link DataResource}'s
      */
     @RequestMapping(value = "/dataResources", method = RequestMethod.GET, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
-    public List<DataResource> getDataResources() throws DataResourceException {
+    public List<DataResource> getDataResources() throws UnexpectedErrorException  {
         return dataResourceDAO.getAll();
     }
 

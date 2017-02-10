@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import uk.co.onsdigital.discovery.exception.DataResourceException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.model.CreatedResponse;
 import uk.co.onsdigital.discovery.model.DataResource;
 
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import static java.text.MessageFormat.format;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.JSON_PARSE_ERROR;
 
 public abstract class AbstractBaseAPI {
 
@@ -29,7 +30,7 @@ public abstract class AbstractBaseAPI {
     @Autowired
     protected ObjectMapper objectMapper;
 
-    protected ResponseEntity<CreatedResponse> response(String identifier, String messageKey) {
+    protected ResponseEntity<CreatedResponse> createSuccessResponse(String identifier, String messageKey) {
         String locationURL = getLocationURL(identifier);
         String url = format(LOCATION_LINK, locationURL, identifier);
 
@@ -42,13 +43,13 @@ public abstract class AbstractBaseAPI {
     }
 
 
-    protected DataResource minifyJSON(DataResource dataResource) throws DataResourceException {
+    protected DataResource minifyJSON(DataResource dataResource) throws UnexpectedErrorException {
         if (StringUtils.isEmpty(dataResource.getMetadata())) return dataResource;
         try {
             JsonNode jNode = objectMapper.readValue(dataResource.getMetadata().trim(), JsonNode.class);
             return dataResource.setMetadata(jNode.toString());
         } catch (IOException e) {
-            throw new DataResourceException("Failed to minify Data resource json", e);
+            throw new UnexpectedErrorException(JSON_PARSE_ERROR, e);
         }
     }
 

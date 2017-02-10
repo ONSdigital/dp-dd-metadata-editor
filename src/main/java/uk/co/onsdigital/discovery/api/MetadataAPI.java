@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
-import uk.co.onsdigital.discovery.exception.MetadataEditorException;
-import uk.co.onsdigital.discovery.exception.ValidataionException;
+import uk.co.onsdigital.discovery.exception.BadRequestException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
+import uk.co.onsdigital.discovery.exception.ValidationException;
 import uk.co.onsdigital.discovery.model.CreatedResponse;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
@@ -28,8 +29,9 @@ import static java.text.MessageFormat.format;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.JSON_PARSE_ERROR;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATASET_ID_MISSING;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.INVALID_DATASET_UUID;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.JSON_PARSE_ERROR;
 
 /**
  * REST endpoint for obtaining {@link DatasetMetadata} by datasetID.
@@ -47,7 +49,7 @@ public class MetadataAPI extends AbstractBaseAPI {
      */
     @GetMapping(value = "/metadatas", produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<DatasetMetadata> getAll() throws MetadataEditorException {
+    public List<DatasetMetadata> getAll() throws UnexpectedErrorException {
         return datasetDAO.getAll();
     }
 
@@ -57,11 +59,16 @@ public class MetadataAPI extends AbstractBaseAPI {
      */
     @GetMapping(value = "/metadata/{datasetID}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public DatasetMetadata getDatasetMetadata(@PathVariable String datasetID) throws MetadataEditorException {
+    public DatasetMetadata getDatasetMetadata(@PathVariable String datasetID) throws UnexpectedErrorException, BadRequestException {
         if (StringUtils.isEmpty(datasetID)) {
-            throw new MetadataEditorException(DATASET_ID_MISSING);
+            throw new UnexpectedErrorException(DATASET_ID_MISSING);
         }
-        return datasetDAO.getByDatasetId(UUID.fromString(datasetID));
+        try {
+            UUID datasetIDUUID = UUID.fromString(datasetID);
+            return datasetDAO.getByDatasetId(datasetIDUUID);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(INVALID_DATASET_UUID.getDetails());
+        }
     }
 
     /**
@@ -71,12 +78,12 @@ public class MetadataAPI extends AbstractBaseAPI {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CreatedResponse> updateDatasetMetadata(@PathVariable String datasetId,
                                                                  @Valid @RequestBody DatasetMetadata datasetMetadata,
-                                                                 BindingResult bindingResult) throws ValidataionException, MetadataEditorException {
+                                                                 BindingResult bindingResult) throws ValidationException, UnexpectedErrorException {
         if (bindingResult.hasErrors()) {
-            throw new ValidataionException(bindingResult);
+            throw new ValidationException(bindingResult);
         }
         datasetDAO.createOrUpdate(sanitise(datasetMetadata));
-        return response(datasetId, CHANGES_SUCCESS_MSG);
+        return createSuccessResponse(datasetId, CHANGES_SUCCESS_MSG);
     }
 
     @Override
@@ -87,13 +94,13 @@ public class MetadataAPI extends AbstractBaseAPI {
     /**
      * Clean up the form data. Check if the JSON metadata is valid JSON, minify it to remove any unnecessary whitespace.
      */
-    private DatasetMetadata sanitise(DatasetMetadata metadata) throws MetadataEditorException {
+    private DatasetMetadata sanitise(DatasetMetadata metadata) throws UnexpectedErrorException {
         if (isNotEmpty(metadata.getJsonMetadata())) {
             try {
                 JsonNode jNode = objectMapper.readValue(metadata.getJsonMetadata().trim(), JsonNode.class);
                 metadata.setJsonMetadata(jNode.toString());
             } catch (IOException e) {
-                throw new MetadataEditorException(JSON_PARSE_ERROR);
+                throw new UnexpectedErrorException(JSON_PARSE_ERROR);
             }
         }
         if (isNotEmpty(metadata.getMajorVersion())) {

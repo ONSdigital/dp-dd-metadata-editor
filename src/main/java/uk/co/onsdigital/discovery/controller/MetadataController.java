@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import uk.co.onsdigital.discovery.dao.DataResourceDAO;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
-import uk.co.onsdigital.discovery.exception.DataResourceException;
-import uk.co.onsdigital.discovery.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.BadRequestException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.validation.MetadataValidator;
 
 import javax.servlet.http.HttpServletResponse;
@@ -47,22 +47,27 @@ public class MetadataController {
 
     @GetMapping("/metadata/{datasetId}")
     public String getExistingMetadata(@PathVariable String datasetId, Model model, HttpServletResponse response)
-            throws MetadataEditorException, DataResourceException {
+            throws UnexpectedErrorException, BadRequestException {
 
-        model.addAttribute(MODEL_KEY, datasetDAO.getByDatasetId(UUID.fromString(datasetId)));
-        model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
-        model.addAttribute(DATA_RESOURCE_LIST, getDataResources());
-        response.setStatus(HttpStatus.OK.value());
-        return "updateDatasetMetadata";
+        try {
+            UUID datasetUUID = UUID.fromString(datasetId);
+            model.addAttribute(MODEL_KEY, datasetDAO.getByDatasetId(datasetUUID));
+            model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
+            model.addAttribute(DATA_RESOURCE_LIST, getDataResources());
+            response.setStatus(HttpStatus.OK.value());
+            return "updateDatasetMetadata";
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException("DatasetId invalid UUID", ex);
+        }
     }
 
     @GetMapping(value = "/metadata")
-    public String getAllDatasets(Model model) throws MetadataEditorException {
+    public String getAllDatasets(Model model) throws UnexpectedErrorException {
         model.addAttribute("datasets", datasetDAO.getAll());
         return "selectDataset";
     }
 
-    private List<String> getDataResources() throws DataResourceException {
+    private List<String> getDataResources() throws UnexpectedErrorException {
         return dataResourceDAO.getAll()
                 .stream()
                 .map(dataResource -> dataResource.getDataResourceID())

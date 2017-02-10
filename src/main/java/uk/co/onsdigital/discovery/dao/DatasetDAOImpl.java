@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
-import uk.co.onsdigital.discovery.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.sql.ResultSet;
@@ -20,10 +20,10 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATABASE_ERROR;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.STRING_TO_INT_ERROR;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.UNEXPECTED_ERROR;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATABASE_ERROR;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATASET_ID_MISSING;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.STRING_TO_INT_ERROR;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.UNEXPECTED_ERROR;
 
 /**
  * {@link DatasetDAO} impl - provides functionality for querying and updating {@link DatasetMetadata}.
@@ -116,18 +116,18 @@ public class DatasetDAOImpl implements DatasetDAO {
     };
 
     @Override
-    public List<String> getDatasetIds() throws MetadataEditorException {
+    public List<String> getDatasetIds() throws UnexpectedErrorException {
         try {
             return namedParameterJdbcTemplate.queryForList(DATASET_IDS_QUERY, new MapSqlParameterSource(), String.class);
         } catch (Exception ex) {
-            throw new MetadataEditorException(DATABASE_ERROR, ex);
+            throw new UnexpectedErrorException(DATABASE_ERROR, ex);
         }
     }
 
     @Override
-    public DatasetMetadata getByDatasetId(UUID datasetID) throws MetadataEditorException {
+    public DatasetMetadata getByDatasetId(UUID datasetID) throws UnexpectedErrorException {
         if (datasetID == null) {
-            throw new MetadataEditorException(DATASET_ID_MISSING);
+            throw new UnexpectedErrorException(DATASET_ID_MISSING);
         }
         try {
             SqlParameterSource sqlParameterSource = createParameterSource.apply(
@@ -136,12 +136,12 @@ public class DatasetDAOImpl implements DatasetDAO {
                             .toList());
             return namedParameterJdbcTemplate.queryForObject(DATASET_BY_ID_QUERY, sqlParameterSource, metadataRowMapper);
         } catch (DataAccessException ex) {
-            throw new MetadataEditorException(DATABASE_ERROR, ex);
+            throw new UnexpectedErrorException(DATABASE_ERROR, ex);
         }
     }
 
     @Override
-    public List<DatasetMetadata> getAll() throws MetadataEditorException {
+    public List<DatasetMetadata> getAll() throws UnexpectedErrorException {
         List<DatasetMetadata> datasetMetadatas = new ArrayList<>();
         namedParameterJdbcTemplate.query(QUERY_FOR_ALL, new HashMap<>(), (rs) -> {
             datasetMetadatas.add(new DatasetMetadata()
@@ -158,7 +158,7 @@ public class DatasetDAOImpl implements DatasetDAO {
     }
 
     @Override
-    public void createOrUpdate(DatasetMetadata form) throws MetadataEditorException {
+    public void createOrUpdate(DatasetMetadata form) throws UnexpectedErrorException {
         try {
             SqlParameterSource sqlParameterSource = createParameterSource.apply(
                     new NamedParam.ListBuilder()
@@ -174,14 +174,14 @@ public class DatasetDAOImpl implements DatasetDAO {
 
             namedParameterJdbcTemplate.update(UPDATE_METADATA_QUERY, sqlParameterSource);
         } catch (Exception ex) {
-            MetadataEditorException.ErrorCode errorCode = UNEXPECTED_ERROR;
+            UnexpectedErrorException.ErrorCode errorCode = UNEXPECTED_ERROR;
 
             if (ex instanceof DataAccessException) {
                 errorCode = DATABASE_ERROR;
             } else if (ex instanceof NumberFormatException) {
                 errorCode = STRING_TO_INT_ERROR;
             }
-            throw new MetadataEditorException(errorCode, ex);
+            throw new UnexpectedErrorException(errorCode, ex);
         }
     }
 }

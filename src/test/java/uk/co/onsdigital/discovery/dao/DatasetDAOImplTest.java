@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.co.onsdigital.discovery.exception.MetadataEditorException;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
@@ -30,8 +30,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATA_RESOURCE_FIELD;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATABASE_ERROR;
-import static uk.co.onsdigital.discovery.exception.MetadataEditorException.ErrorCode.DATASET_ID_MISSING;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATABASE_ERROR;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_BY_ID_QUERY;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_IDS_QUERY;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_ID_FIELD;
@@ -97,7 +97,7 @@ public class DatasetDAOImplTest {
                 eq(String.class));
     }
 
-    @Test(expected = MetadataEditorException.class)
+    @Test(expected = UnexpectedErrorException.class)
     public void shouldThrowMetaDataEditorExceptionForAnyError() throws Exception {
         MyDataAccessException exToThrow = new MyDataAccessException("Its broken.");
 
@@ -106,7 +106,7 @@ public class DatasetDAOImplTest {
 
         try {
             dao.getDatasetIds();
-        } catch (MetadataEditorException ex) {
+        } catch (UnexpectedErrorException ex) {
             assertThat(ex.getErrorCode(), equalTo(DATABASE_ERROR));
             verify(jdbcTemplateMock, times(1))
                     .queryForList(eq(DATASET_IDS_QUERY), any(MapSqlParameterSource.class), eq(String.class));
@@ -130,19 +130,19 @@ public class DatasetDAOImplTest {
                 eq(metadataRowMapperMock));
     }
 
-    @Test(expected = MetadataEditorException.class)
+    @Test(expected = UnexpectedErrorException.class)
     public void getByIDShouldThrowMetadataEditorExceptionForDatasetIDMissing() throws Exception {
         try {
             dao.getByDatasetId(null);
-        } catch (MetadataEditorException ex) {
-            assertThat(ex, equalTo(new MetadataEditorException(DATASET_ID_MISSING)));
+        } catch (UnexpectedErrorException ex) {
+            assertThat(ex, equalTo(new UnexpectedErrorException(DATASET_ID_MISSING)));
             assertThat(createParameterSourceStubInvocations, equalTo(0));
             verifyZeroInteractions(jdbcTemplateMock);
             throw ex;
         }
     }
 
-    @Test(expected = MetadataEditorException.class)
+    @Test(expected = UnexpectedErrorException.class)
     public void getByIDShouldThrowMetadataEditorExceptionForAnyDataAccessException() throws Exception {
         UUID datasetId = UUID.randomUUID();
 
@@ -155,8 +155,8 @@ public class DatasetDAOImplTest {
 
         try {
             dao.getByDatasetId(datasetId);
-        } catch (MetadataEditorException e) {
-            assertThat(e, equalTo(new MetadataEditorException(DATABASE_ERROR)));
+        } catch (UnexpectedErrorException e) {
+            assertThat(e, equalTo(new UnexpectedErrorException(DATABASE_ERROR)));
             assertThat(createParameterSourceStubInvocations, equalTo(1));
             assertThat(createParameterSourceStubArgs, equalTo(expectedParams));
             verify(jdbcTemplateMock, times(1))
@@ -196,7 +196,7 @@ public class DatasetDAOImplTest {
                 .update(eq(UPDATE_METADATA_QUERY), eq(sqlParameterSourceMock));
     }
 
-    @Test(expected = MetadataEditorException.class)
+    @Test(expected = UnexpectedErrorException.class)
     public void createOrUpdateDatasetMetadataShouldThrowMetadataEditorExceptionForDataAccessException()
             throws Exception {
 
@@ -226,7 +226,7 @@ public class DatasetDAOImplTest {
 
         try {
             dao.createOrUpdate(metadata);
-        } catch (MetadataEditorException e) {
+        } catch (UnexpectedErrorException e) {
             assertThat(createParameterSourceStubInvocations, equalTo(1));
             assertThat(createParameterSourceStubArgs, equalTo(expectedParams));
             verify(jdbcTemplateMock, times(1))

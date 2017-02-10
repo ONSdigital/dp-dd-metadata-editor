@@ -10,7 +10,7 @@ import uk.co.onsdigital.discovery.validation.annotation.*;
  */
 public class DatasetMetadata {
 
-    @JSON
+    @JSON(message = "dataset.json.metadata.invalid")
     private String jsonMetadata;
 
     @NotEmpty(message = "dataset.id.empty")

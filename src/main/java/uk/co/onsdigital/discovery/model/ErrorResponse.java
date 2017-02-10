@@ -1,5 +1,8 @@
 package uk.co.onsdigital.discovery.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.text.MessageFormat;
@@ -14,13 +17,16 @@ public class ErrorResponse {
     private int httpStatus;
     private String message;
 
-    public int getHttpStatus() {
-        return httpStatus;
-    }
-
     public ErrorResponse(Exception ex, HttpStatus status) {
         this.message = MessageFormat.format(ERROR_FMT, ex.getClass().getSimpleName(), ex.getMessage());
         this.httpStatus = status.value();
+    }
+
+    public ErrorResponse() {
+    }
+
+    public int getHttpStatus() {
+        return httpStatus;
     }
 
     public ErrorResponse setHttpStatus(int httpStatus) {
@@ -35,5 +41,35 @@ public class ErrorResponse {
     public ErrorResponse setMessage(String message) {
         this.message = message;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ErrorResponse that = (ErrorResponse) o;
+
+        return new EqualsBuilder()
+                .append(getHttpStatus(), that.getHttpStatus())
+                .append(getMessage(), that.getMessage())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(getHttpStatus())
+                .append(getMessage())
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("httpStatus", httpStatus)
+                .append("message", message)
+                .toString();
     }
 }
