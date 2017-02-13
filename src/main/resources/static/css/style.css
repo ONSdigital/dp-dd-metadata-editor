@@ -30,6 +30,13 @@
 
 label {
    font-size: 18px;
+   display: inline-block;
+   padding-right: 5px;
+}
+
+.input-aligned {
+   display: inline-block;
+   padding-right: 5px;
 }
 
 select {

@@ -8,7 +8,7 @@
 ### Get a specific Dataset Metadata (by datasetId).
     curl \
     -H "Content-Type: application/json" \
-    -X GET http://localhost:23000/metadata/063085a6-6d88-478b-b5e4-8144dc37c57b | jq "."
+    -X GET http://localhost:23000/metadata/1c85f3f1-054e-4a77-a01b-bb00058f94e5 | jq "."
 
 
 ### Update a Dataset Metadata
@@ -18,11 +18,12 @@
     -X PUT \
     -d '{
       "jsonMetadata": "{\"Name\":\"Dataset Metadata Test 1\", \"uploadDate\":\"01/01/2017\"}",
-      "datasetId": "063085a6-6d88-478b-b5e4-8144dc37c57b",
-      "dataResource": "ABCD1234",
-      "majorVersion": "1",
-      "minorVersion": "1",
+      "datasetId": "1c85f3f1-054e-4a77-a01b-bb00058f94e5",
+      "dataResource": "ABC123",
+      "majorVersion": 2,
+      "majorLabel": "2016",
+      "minorVersion": 1,
       "revisionNotes": "N/a",
       "revisionReason": "Initial update."
     }' \
-    http://localhost:23000/metadata/063085a6-6d88-478b-b5e4-8144dc37c57b
+    http://localhost:23000/metadata/1c85f3f1-054e-4a77-a01b-bb00058f94e5

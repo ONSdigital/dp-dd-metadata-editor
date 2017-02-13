@@ -3,7 +3,11 @@ package uk.co.onsdigital.discovery.model;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
-import uk.co.onsdigital.discovery.validation.annotation.*;
+import uk.co.onsdigital.discovery.validation.annotation.DataResourceID;
+import uk.co.onsdigital.discovery.validation.annotation.JSON;
+import uk.co.onsdigital.discovery.validation.annotation.UUID;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Model representing the Metadata fields of the DinmensionalDataSet table.
@@ -20,12 +24,14 @@ public class DatasetMetadata {
     @DataResourceID
     private String dataResource;
 
-    @NotEmpty(message = "dataset.major.version.empty")
-    private String majorVersion;
+    @NotNull(message = "dataset.major.version.empty")
+    private Integer majorVersion;
 
-    @NotEmpty(message = "dataset.minor.version.empty")
-    private String minorVersion;
+    @NotEmpty(message = "dataset.major.label.empty")
+    private String majorLabel;
 
+    @NotNull(message = "dataset.minor.version.empty")
+    private Integer minorVersion;
     private String revisionNotes;
     private String revisionReason;
 
@@ -65,20 +71,20 @@ public class DatasetMetadata {
         return this;
     }
 
-    public String getMajorVersion() {
+    public Integer getMajorVersion() {
         return majorVersion;
     }
 
-    public DatasetMetadata setMajorVersion(String majorVersion) {
+    public DatasetMetadata setMajorVersion(Integer majorVersion) {
         this.majorVersion = majorVersion;
         return this;
     }
 
-    public String getMinorVersion() {
+    public Integer getMinorVersion() {
         return minorVersion;
     }
 
-    public DatasetMetadata setMinorVersion(String minorVersion) {
+    public DatasetMetadata setMinorVersion(Integer minorVersion) {
         this.minorVersion = minorVersion;
         return this;
     }
@@ -89,6 +95,15 @@ public class DatasetMetadata {
 
     public DatasetMetadata setDataResource(String dataResource) {
         this.dataResource = dataResource;
+        return this;
+    }
+
+    public String getMajorLabel() {
+        return majorLabel;
+    }
+
+    public DatasetMetadata setMajorLabel(String majorLabel) {
+        this.majorLabel = majorLabel;
         return this;
     }
 
@@ -108,6 +123,7 @@ public class DatasetMetadata {
                 .append(getMinorVersion(), that.getMinorVersion())
                 .append(getRevisionNotes(), that.getRevisionNotes())
                 .append(getRevisionReason(), that.getRevisionReason())
+                .append(getMajorLabel(), that.getMajorLabel())
                 .isEquals();
     }
 
@@ -118,6 +134,7 @@ public class DatasetMetadata {
                 .append(getDatasetId())
                 .append(getDataResource())
                 .append(getMajorVersion())
+                .append(getMajorLabel())
                 .append(getMinorVersion())
                 .append(getRevisionNotes())
                 .append(getRevisionReason())

@@ -42,12 +42,10 @@ public abstract class AbstractBaseAPI {
                 httpHeaders, HttpStatus.CREATED);
     }
 
-
-    protected DataResource minifyJSON(DataResource dataResource) throws UnexpectedErrorException {
-        if (StringUtils.isEmpty(dataResource.getMetadata())) return dataResource;
+    protected String minifyJSONString(String jsonStr) throws UnexpectedErrorException {
+        if (StringUtils.isEmpty(jsonStr)) return jsonStr;
         try {
-            JsonNode jNode = objectMapper.readValue(dataResource.getMetadata().trim(), JsonNode.class);
-            return dataResource.setMetadata(jNode.toString());
+            return objectMapper.readValue(jsonStr.trim(), JsonNode.class).toString();
         } catch (IOException e) {
             throw new UnexpectedErrorException(JSON_PARSE_ERROR, e);
         }

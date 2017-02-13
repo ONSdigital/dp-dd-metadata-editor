@@ -65,8 +65,9 @@ public class MetadataAPITest extends AbstractAPITest {
                 .setDataResource("1234")
                 .setDatasetId(datasetID.toString())
                 .setJsonMetadata("")
-                .setMajorVersion("1")
-                .setMinorVersion("0");
+                .setMajorVersion(1)
+                .setMajorLabel("2017")
+                .setMinorVersion(0);
     }
 
     @Test

@@ -39,6 +39,8 @@ function submitForm(e, form) {
             data:  JSON.stringify(form)
         }).done (function(data, textStatus, jqXHR) {
             showSuccess(data, textStatus, jqXHR);
+            refresh(jqXHR.getResponseHeader('location'));
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
         }).fail(function (data, textStatus, jqXHR) {
             displayErrors(data, textStatus, jqXHR);
         });
@@ -66,6 +68,7 @@ function extractFormValues() {
         datasetId: $("#hidden-dataset-id").text(),
         dataResource: $("#data-res-select").val(),
         majorVersion: $("#major-version").val(),
+        majorLabel: $("#major-label").val(),
         minorVersion: $("#minor-version").val(),
         minorVersion: $("#minor-version").val(),
         revisionReason: $("#revision-reason").val(),
@@ -73,6 +76,26 @@ function extractFormValues() {
         jsonMetadata: $("#json-input").val(),
     };
     return metadataForm;
+}
+
+function refresh(url) {
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).done(function(response) {
+        if (response.jsonMetadata != "") {
+            var jsonObj = JSON.parse(response.jsonMetadata);
+            $('#json-input').val(JSON.stringify(jsonObj, null, '\t'));
+        }
+        $("#major-version").val(response.majorVersion);
+        $("#major-label").val(response.majorLabel);
+        $("#minor-version").val(response.minorVersion);
+        $("#revision-reason").val(response.revisionReason);
+        $("#revision-notes").val(response.revisionNotes);
+        $("#data-res-select").val(response.dataResource);
+    });
 }
 
 function displayCurrentValues() {

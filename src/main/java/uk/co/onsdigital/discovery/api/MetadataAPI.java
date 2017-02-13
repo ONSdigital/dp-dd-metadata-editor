@@ -1,6 +1,5 @@
 package uk.co.onsdigital.discovery.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,8 @@ import uk.co.onsdigital.discovery.model.CreatedResponse;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import javax.validation.Valid;
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +31,7 @@ import static org.apache.commons.lang3.StringUtils.trim;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.INVALID_DATASET_UUID;
-import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.JSON_PARSE_ERROR;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.UNEXPECTED_ERROR;
 
 /**
  * REST endpoint for obtaining {@link DatasetMetadata} by datasetID.
@@ -52,7 +52,6 @@ public class MetadataAPI extends AbstractBaseAPI {
     public List<DatasetMetadata> getAll() throws UnexpectedErrorException {
         return datasetDAO.getAll();
     }
-
 
     /**
      * Get by {@link DatasetMetadata#datasetId}
@@ -96,18 +95,10 @@ public class MetadataAPI extends AbstractBaseAPI {
      */
     private DatasetMetadata sanitise(DatasetMetadata metadata) throws UnexpectedErrorException {
         if (isNotEmpty(metadata.getJsonMetadata())) {
-            try {
-                JsonNode jNode = objectMapper.readValue(metadata.getJsonMetadata().trim(), JsonNode.class);
-                metadata.setJsonMetadata(jNode.toString());
-            } catch (IOException e) {
-                throw new UnexpectedErrorException(JSON_PARSE_ERROR);
-            }
+            metadata.setJsonMetadata(minifyJSONString(metadata.getJsonMetadata()));
         }
-        if (isNotEmpty(metadata.getMajorVersion())) {
-            metadata.setMajorVersion(trim(metadata.getMajorVersion()));
-        }
-        if (isNotEmpty(metadata.getMinorVersion())) {
-            metadata.setMinorVersion(trim(metadata.getMinorVersion()));
+        if (isNotEmpty(metadata.getMajorLabel())) {
+            metadata.setMajorLabel(toCamelCase(metadata.getMajorLabel()));
         }
         if (isNotEmpty(metadata.getRevisionNotes())) {
             metadata.setRevisionNotes(trim(metadata.getRevisionNotes()));
@@ -116,5 +107,24 @@ public class MetadataAPI extends AbstractBaseAPI {
             metadata.setRevisionReason(trim(metadata.getRevisionReason()));
         }
         return metadata;
+    }
+
+    private String toCamelCase(String input) throws UnexpectedErrorException {
+        try {
+            if (StringUtils.isEmpty(input)) return input;
+
+            StringBuilder camelCase = new StringBuilder();
+            for (String word : input.trim().split(" ")) {
+
+                String[] letters = word.split("");
+                for (int i = 0; i < letters.length; i++) {
+                    String letter = i == 0 ? letters[i].toUpperCase() : letters[i].toLowerCase();
+                    camelCase.append(URLEncoder.encode(letter, "UTF-8"));
+                }
+            }
+            return camelCase.toString();
+        } catch (UnsupportedEncodingException e) {
+            throw new UnexpectedErrorException(UNEXPECTED_ERROR);
+        }
     }
 }
