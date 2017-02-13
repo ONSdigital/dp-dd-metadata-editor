@@ -11,7 +11,6 @@ import uk.co.onsdigital.discovery.dao.DataResourceDAO;
 import uk.co.onsdigital.discovery.dao.DatasetDAO;
 import uk.co.onsdigital.discovery.exception.BadRequestException;
 import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
-import uk.co.onsdigital.discovery.validation.MetadataValidator;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -26,15 +25,11 @@ import static java.util.stream.Collectors.toList;
 @Controller
 public class MetadataController {
 
-    static final String EDITOR_VIEW = "editor";
     static final String MODEL_KEY = "datasetMetadata";
     static final String DATASETS_LIST_KEY = "dataSetList";
     static final String DATA_RESOURCE_LIST = "dataResources";
-    static final String UUID_PARAM_NAME = "uuid";
-    static final String UPDATE_SUCCESSFUL_FLAG = "updateSuccessful";
-
-    @Autowired
-    private MetadataValidator validator;
+    static final String UPDATE_DS_VIEW = "updateDatasetMetadata";
+    static final String SELECT_DS_VIEW = "selectDataset";
 
     @Autowired
     private DatasetDAO datasetDAO;
@@ -55,7 +50,7 @@ public class MetadataController {
             model.addAttribute(DATASETS_LIST_KEY, datasetDAO.getDatasetIds());
             model.addAttribute(DATA_RESOURCE_LIST, getDataResources());
             response.setStatus(HttpStatus.OK.value());
-            return "updateDatasetMetadata";
+            return UPDATE_DS_VIEW;
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException("DatasetId invalid UUID", ex);
         }
@@ -64,7 +59,9 @@ public class MetadataController {
     @GetMapping(value = "/metadata")
     public String getAllDatasets(Model model) throws UnexpectedErrorException {
         model.addAttribute("datasets", datasetDAO.getAll());
-        return "selectDataset";
+
+
+        return SELECT_DS_VIEW;
     }
 
     private List<String> getDataResources() throws UnexpectedErrorException {

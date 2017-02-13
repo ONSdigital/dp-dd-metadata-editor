@@ -64,8 +64,7 @@ public class DataResourceAPI extends AbstractBaseAPI {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }
-
-        dataResourceDAO.create(minifyJSON(dataResource));
+        dataResourceDAO.create(dataResource.setMetadata(minifyJSONString(dataResource.getMetadata())));
         return createSuccessResponse(dataResource.getDataResourceID(), CHANGES_SUCCESS_MSG);
     }
 
@@ -78,7 +77,7 @@ public class DataResourceAPI extends AbstractBaseAPI {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }
-        dataResourceDAO.update(minifyJSON(dataResource));
+        dataResourceDAO.update(dataResource.setMetadata(minifyJSONString(dataResource.getMetadata())));
         return createSuccessResponse(dataResourceID, CHANGES_SUCCESS_MSG);
     }
 

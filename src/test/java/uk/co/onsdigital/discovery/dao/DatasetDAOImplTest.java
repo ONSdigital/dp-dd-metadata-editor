@@ -30,6 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATA_RESOURCE_FIELD;
+import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.MAJOR_LABEL_FIELD;
 import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATABASE_ERROR;
 import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_BY_ID_QUERY;
@@ -170,8 +171,9 @@ public class DatasetDAOImplTest {
         UUID datasetId = UUID.randomUUID();
         DatasetMetadata metadata = new DatasetMetadata()
                 .setDatasetId(datasetId.toString())
-                .setMajorVersion("1")
-                .setMinorVersion("0")
+                .setMajorVersion(1)
+                .setMajorLabel("2017")
+                .setMinorVersion(0)
                 .setRevisionNotes("")
                 .setRevisionReason("")
                 .setDataResource("")
@@ -180,6 +182,7 @@ public class DatasetDAOImplTest {
         List<NamedParam> expectedParams = new NamedParam.ListBuilder()
                 .addParam(JSON_METADATA_FIELD, "")
                 .addParam(MAJOR_VERSION_FIELD, 1)
+                .addParam(MAJOR_LABEL_FIELD, "2017")
                 .addParam(MINOR_VERSION_FIELD, 0)
                 .addParam(REVISION_NOTES_FIELD, "")
                 .addParam(REVISION_REASON_FIELD, "")
@@ -203,8 +206,9 @@ public class DatasetDAOImplTest {
         UUID datasetId = UUID.randomUUID();
         DatasetMetadata metadata = new DatasetMetadata()
                 .setDatasetId(datasetId.toString())
-                .setMajorVersion("1")
-                .setMinorVersion("0")
+                .setMajorVersion(1)
+                .setMajorLabel("2017")
+                .setMinorVersion(0)
                 .setRevisionNotes("")
                 .setRevisionReason("")
                 .setDataResource("")
@@ -213,6 +217,7 @@ public class DatasetDAOImplTest {
         List<NamedParam> expectedParams = new NamedParam.ListBuilder()
                 .addParam(JSON_METADATA_FIELD, "")
                 .addParam(MAJOR_VERSION_FIELD, 1)
+                .addParam(MAJOR_LABEL_FIELD, "2017")
                 .addParam(MINOR_VERSION_FIELD, 0)
                 .addParam(REVISION_NOTES_FIELD, "")
                 .addParam(REVISION_REASON_FIELD, "")

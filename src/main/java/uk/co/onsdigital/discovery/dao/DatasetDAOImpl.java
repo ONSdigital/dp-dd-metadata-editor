@@ -42,6 +42,11 @@ public class DatasetDAOImpl implements DatasetDAO {
     static final String MAJOR_VERSION_FIELD = "major_version";
 
     /**
+     * Major Label column name.
+     */
+    static final String MAJOR_LABEL_FIELD = "major_label";
+
+    /**
      * Minor version column name.
      */
     static final String MINOR_VERSION_FIELD = "minor_version";
@@ -71,22 +76,26 @@ public class DatasetDAOImpl implements DatasetDAO {
     /**
      * Query for a DimensionalDataSet by its ID.
      */
-    static final String DATASET_BY_ID_QUERY = "SELECT " +
-            "dimensional_data_set_id, metadata, major_version, minor_version, revision_notes, revision_reason, " +
-            "data_resource FROM dimensional_data_set WHERE dimensional_data_set_id = :dimensional_data_set_id";
+    static final String DATASET_BY_ID_QUERY = "SELECT dimensional_data_set_id, metadata, major_version, major_label," +
+            " minor_version, revision_notes, revision_reason, data_resource FROM dimensional_data_set WHERE" +
+            " dimensional_data_set_id = :dimensional_data_set_id";
 
     /**
      * Update statement for persisting new/updating metadata.
      */
-    static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set " +
-            "SET metadata = :metadata,  major_version = :major_version, minor_version = :minor_version," +
-            " revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource " +
+    static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set SET metadata = :metadata,  " +
+            "major_version = :major_version, major_label = :major_label, minor_version = :minor_version, " +
+            "revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource " +
             "WHERE dimensional_data_set_id = :dimensional_data_set_id";
 
     static final String QUERY_FOR_ALL = "SELECT * FROM dimensional_data_set";
 
     private static String getStr(ResultSet rs, String key) throws SQLException {
         return isNotEmpty(rs.getString(key)) ? rs.getString(key) : "";
+    }
+
+    private static int getInt(ResultSet rs, String key) throws SQLException {
+        return rs.getInt(key);
     }
 
     @Autowired
@@ -98,8 +107,9 @@ public class DatasetDAOImpl implements DatasetDAO {
     private RowMapper<DatasetMetadata> metadataRowMapper = (rs, i) ->
             new DatasetMetadata()
                     .setJsonMetadata(getStr(rs, JSON_METADATA_FIELD))
-                    .setMajorVersion(getStr(rs, MAJOR_VERSION_FIELD))
-                    .setMinorVersion(getStr(rs, MINOR_VERSION_FIELD))
+                    .setMajorVersion(getInt(rs, MAJOR_VERSION_FIELD))
+                    .setMajorLabel(getStr(rs, MAJOR_LABEL_FIELD))
+                    .setMinorVersion(getInt(rs, MINOR_VERSION_FIELD))
                     .setRevisionNotes(getStr(rs, REVISION_NOTES_FIELD))
                     .setRevisionReason(getStr(rs, REVISION_REASON_FIELD))
                     .setDataResource(getStr(rs, DATA_RESOURCE_FIELD))
@@ -146,8 +156,9 @@ public class DatasetDAOImpl implements DatasetDAO {
         namedParameterJdbcTemplate.query(QUERY_FOR_ALL, new HashMap<>(), (rs) -> {
             datasetMetadatas.add(new DatasetMetadata()
                     .setJsonMetadata(getStr(rs, JSON_METADATA_FIELD))
-                    .setMajorVersion(getStr(rs, MAJOR_VERSION_FIELD))
-                    .setMinorVersion(getStr(rs, MINOR_VERSION_FIELD))
+                    .setMajorVersion(getInt(rs, MAJOR_VERSION_FIELD))
+                    .setMajorLabel(getStr(rs, MAJOR_LABEL_FIELD))
+                    .setMinorVersion(getInt(rs, MINOR_VERSION_FIELD))
                     .setRevisionNotes(getStr(rs, REVISION_NOTES_FIELD))
                     .setRevisionReason(getStr(rs, REVISION_REASON_FIELD))
                     .setDataResource(getStr(rs, DATA_RESOURCE_FIELD))
@@ -163,8 +174,9 @@ public class DatasetDAOImpl implements DatasetDAO {
             SqlParameterSource sqlParameterSource = createParameterSource.apply(
                     new NamedParam.ListBuilder()
                             .addParam(JSON_METADATA_FIELD, form.getJsonMetadata())
-                            .addParam(MAJOR_VERSION_FIELD, Integer.parseInt(form.getMajorVersion()))
-                            .addParam(MINOR_VERSION_FIELD, Integer.parseInt(form.getMinorVersion()))
+                            .addParam(MAJOR_VERSION_FIELD, form.getMajorVersion())
+                            .addParam(MAJOR_LABEL_FIELD, form.getMajorLabel())
+                            .addParam(MINOR_VERSION_FIELD, form.getMinorVersion())
                             .addParam(REVISION_NOTES_FIELD, form.getRevisionNotes())
                             .addParam(REVISION_REASON_FIELD, form.getRevisionReason())
                             .addParam(DATA_RESOURCE_FIELD, form.getDataResource())
