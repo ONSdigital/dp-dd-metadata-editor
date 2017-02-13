@@ -35,14 +35,12 @@ node {
     if (env.JOB_NAME.replaceFirst('.+/', '') != 'develop') return
 
     stage('Deploy') {
-        for (group in [env.CODEDEPLOY_DISCOVERY_FRONTEND_DEPLOYMENT_GROUP, env.CODEDEPLOY_DISCOVERY_PUBLISHING_DEPLOYMENT_GROUP]) {
-            sh sprintf('aws deploy create-deployment %s %s %s,bundleType=tgz,key=%s', [
-                '--application-name dp-dd-metadata-editor',
-                "--deployment-group-name ${group}",
-                "--s3-location bucket=${env.S3_REVISIONS_BUCKET}",
-                "dp-dd-metadata-editor-${revision}.tar.gz",
-            ])
-        }
+        sh sprintf('aws deploy create-deployment %s %s %s,bundleType=tgz,key=%s', [
+            '--application-name dp-dd-metadata-editor',
+            "--deployment-group-name ${env.CODEDEPLOY_DISCOVERY_PUBLISHING_DEPLOYMENT_GROUP}",
+            "--s3-location bucket=${env.S3_REVISIONS_BUCKET}",
+            "dp-dd-metadata-editor-${revision}.tar.gz",
+        ])
     }
 }
 
