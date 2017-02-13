@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.text.MessageFormat.format;
+import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -115,12 +116,7 @@ public class MetadataAPI extends AbstractBaseAPI {
 
             StringBuilder camelCase = new StringBuilder();
             for (String word : input.trim().split(" ")) {
-
-                String[] letters = word.split("");
-                for (int i = 0; i < letters.length; i++) {
-                    String letter = i == 0 ? letters[i].toUpperCase() : letters[i].toLowerCase();
-                    camelCase.append(URLEncoder.encode(letter, "UTF-8"));
-                }
+                camelCase.append(URLEncoder.encode(capitalize(word.toLowerCase()), "UTF-8"));
             }
             return camelCase.toString();
         } catch (UnsupportedEncodingException e) {

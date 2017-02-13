@@ -77,7 +77,6 @@ public class DataResourceAPI extends AbstractBaseAPI {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }
-        ;
         dataResourceDAO.update(dataResource.setMetadata(minifyJSONString(dataResource.getMetadata())));
         return createSuccessResponse(dataResourceID, CHANGES_SUCCESS_MSG);
     }
