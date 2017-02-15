@@ -1,0 +1,17 @@
+---
+
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+
+inputs:
+  - name: dp-dd-metadata-editor
+
+outputs:
+  - name: target
+
+run:
+  path: dp-dd-metadata-editor/ci/scripts/build.sh
