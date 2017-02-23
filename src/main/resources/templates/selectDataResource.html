@@ -41,7 +41,14 @@
 
             <ul  th:if="${!#lists.isEmpty(dataResources)}">
                 <li th:each="dataResource : ${dataResources}" th:value="${dataResource.dataResourceID}">
-                    <a th:href="'/dataResource/' + ${dataResource.dataResourceID}" th:text="${dataResource.dataResourceID}"></a>
+                    <div>
+                        <strong><span th:text="#{'dataset.title.field.label'}"></span></strong>
+                        <span th:text="${dataResource.title}"></span>
+                    </div>
+                    <div>
+                        <strong><span th:text="#{'dataset.resource.field.label'} + ':'"></span></strong>
+                        <a th:href="'/dataResource/' + ${dataResource.dataResourceID}" th:text="${dataResource.dataResourceID}"></a>
+                    </div>
                 </li>
             </ul>
         </div>

@@ -2,6 +2,7 @@ package uk.co.onsdigital.discovery.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 import uk.co.onsdigital.discovery.validation.annotation.DataResourceID;
 import uk.co.onsdigital.discovery.validation.annotation.JSON;
@@ -34,6 +35,7 @@ public class DatasetMetadata {
     private Integer minorVersion;
     private String revisionNotes;
     private String revisionReason;
+    private String title;
 
     public String getRevisionNotes() {
         return revisionNotes;
@@ -107,6 +109,15 @@ public class DatasetMetadata {
         return this;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public DatasetMetadata setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,6 +135,7 @@ public class DatasetMetadata {
                 .append(getRevisionNotes(), that.getRevisionNotes())
                 .append(getRevisionReason(), that.getRevisionReason())
                 .append(getMajorLabel(), that.getMajorLabel())
+                .append(getTitle(), that.getTitle())
                 .isEquals();
     }
 
@@ -138,6 +150,22 @@ public class DatasetMetadata {
                 .append(getMinorVersion())
                 .append(getRevisionNotes())
                 .append(getRevisionReason())
+                .append(getTitle())
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("jsonMetadata", jsonMetadata)
+                .append("datasetId", datasetId)
+                .append("dataResource", dataResource)
+                .append("majorVersion", majorVersion)
+                .append("majorLabel", majorLabel)
+                .append("minorVersion", minorVersion)
+                .append("revisionNotes", revisionNotes)
+                .append("revisionReason", revisionReason)
+                .append("title", title)
+                .toString();
     }
 }
