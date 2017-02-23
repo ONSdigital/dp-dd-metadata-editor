@@ -104,7 +104,7 @@ public class DatasetDAOImpl implements DatasetDAO {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
-    public RowMapper<DatasetMetadata> metadataRowMapper;
+    private RowMapper<DatasetMetadata> metadataRowMapper;
 
 
     // Function encapsulates the creation of the MapSqlParameterSource. Can be easily be swapped for mock in test.
