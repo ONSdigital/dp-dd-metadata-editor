@@ -24,14 +24,6 @@ import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.TITLE_FIELD;
 @Component
 public class DatasetMetadataRowMapper implements RowMapper<DatasetMetadata> {
 
-    private static String getStr(ResultSet rs, String key) throws SQLException {
-        return isNotEmpty(rs.getString(key)) ? rs.getString(key) : "";
-    }
-
-    private static int getInt(ResultSet rs, String key) throws SQLException {
-        return rs.getInt(key);
-    }
-
     @Override
     public DatasetMetadata mapRow(ResultSet rs, int i) throws SQLException {
         return new DatasetMetadata()
@@ -44,5 +36,13 @@ public class DatasetMetadataRowMapper implements RowMapper<DatasetMetadata> {
                 .setDataResource(getStr(rs, DATA_RESOURCE_FIELD))
                 .setDatasetId(getStr(rs, DATASET_ID_FIELD))
                 .setTitle(getStr(rs, TITLE_FIELD));
+    }
+
+    private String getStr(ResultSet rs, String key) throws SQLException {
+        return isNotEmpty(rs.getString(key)) ? rs.getString(key) : "";
+    }
+
+    private int getInt(ResultSet rs, String key) throws SQLException {
+        return rs.getInt(key);
     }
 }
