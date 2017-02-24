@@ -74,6 +74,7 @@ function extractFormValues() {
         revisionReason: $("#revision-reason").val(),
         revisionNotes: $("#revision-notes").val(),
         jsonMetadata: $("#json-input").val(),
+        title: $("#dataset-title").val(),
     };
     return metadataForm;
 }
@@ -95,6 +96,7 @@ function refresh(url) {
         $("#revision-reason").val(response.revisionReason);
         $("#revision-notes").val(response.revisionNotes);
         $("#data-res-select").val(response.dataResource);
+        $("#dataset-title").val(response.title);
     });
 }
 
@@ -120,6 +122,7 @@ function displayCurrentValues() {
             $("#revision-reason").val(response.revisionReason);
             $("#revision-notes").val(response.revisionNotes);
             $("#data-res-select").val(response.dataResource);
+            $("#dataset-title").val(response.title);
          }).fail(function(response) {
             $("#error-banner").text(response.responseJSON.message);
             $("#error-banner").show();
@@ -130,6 +133,7 @@ function displayCurrentValues() {
         $('#minor-version').val("");
         $('#revision-reason').val("");
         $('#revision-notes').val("");
+        $("#dataset-title").val("");
     }
 }
 

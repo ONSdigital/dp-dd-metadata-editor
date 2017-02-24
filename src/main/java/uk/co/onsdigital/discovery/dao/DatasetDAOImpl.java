@@ -87,8 +87,8 @@ public class DatasetDAOImpl implements DatasetDAO {
      */
     static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set SET metadata = :metadata,  " +
             "major_version = :major_version, major_label = :major_label, minor_version = :minor_version, " +
-            "revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource " +
-            "WHERE dimensional_data_set_id = :dimensional_data_set_id";
+            "revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource, " +
+            "title = :title WHERE dimensional_data_set_id = :dimensional_data_set_id";
 
     static final String QUERY_FOR_ALL = "SELECT * FROM dimensional_data_set dds ORDER BY dds.major_version DESC, dds.minor_version DESC";
 

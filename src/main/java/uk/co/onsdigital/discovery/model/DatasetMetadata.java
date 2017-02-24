@@ -35,6 +35,8 @@ public class DatasetMetadata {
     private Integer minorVersion;
     private String revisionNotes;
     private String revisionReason;
+
+    @NotEmpty (message = "dataset.title.empty")
     private String title;
 
     public String getRevisionNotes() {
