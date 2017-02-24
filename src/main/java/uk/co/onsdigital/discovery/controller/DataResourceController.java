@@ -32,7 +32,6 @@ public class DataResourceController {
     @GetMapping(value = "/dataResource/{dataResourceID}")
     public String getExistingDataResource(@PathVariable String dataResourceID, Model model) throws UnexpectedErrorException {
         model.addAttribute(DATA_RES_MODEL_KEY, dataResourceDAO.getByID(dataResourceID));
-        model.addAttribute("existing", true);
         return UPDATE_DATA_RESCOURCE_VIEW;
     }
 
