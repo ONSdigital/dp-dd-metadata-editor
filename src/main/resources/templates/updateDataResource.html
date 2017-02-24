@@ -42,7 +42,8 @@
 
                 <div class="field">
                     <label for="data-resource-id">ID</label>
-                    <input type="text" id="data-resource-id" th:field="*{dataResourceID}"/>
+                    <h3 style="display: inline-block; font-weight: bold;" th:text="*{dataResourceID}"></h3>
+                    <input type="hidden" id="data-resource-id" th:field="*{dataResourceID}"/>
                 </div>
 
                 <div class="field">
