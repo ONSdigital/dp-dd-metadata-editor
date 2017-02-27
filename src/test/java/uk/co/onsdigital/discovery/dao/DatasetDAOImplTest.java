@@ -10,8 +10,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.dao.parameters.NamedParam;
+import uk.co.onsdigital.discovery.exception.UnexpectedErrorException;
 import uk.co.onsdigital.discovery.model.DatasetMetadata;
 
 import java.util.ArrayList;
@@ -29,24 +29,27 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATA_RESOURCE_FIELD;
-import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.MAJOR_LABEL_FIELD;
-import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATABASE_ERROR;
-import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATASET_ID_MISSING;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_BY_ID_QUERY;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_IDS_QUERY;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATASET_ID_FIELD;
+import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.DATA_RESOURCE_FIELD;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.JSON_METADATA_FIELD;
+import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.MAJOR_LABEL_FIELD;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.MAJOR_VERSION_FIELD;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.MINOR_VERSION_FIELD;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.REVISION_NOTES_FIELD;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.REVISION_REASON_FIELD;
+import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.TITLE_FIELD;
 import static uk.co.onsdigital.discovery.dao.DatasetDAOImpl.UPDATE_METADATA_QUERY;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATABASE_ERROR;
+import static uk.co.onsdigital.discovery.exception.UnexpectedErrorException.ErrorCode.DATASET_ID_MISSING;
 
 /**
  * Test verifying the behaviour of the {@link DatasetDAOImpl}.
  */
 public class DatasetDAOImplTest {
+
+    private static final String TITLE = "A long time ago, in a galaxy far far away...";
 
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplateMock;
@@ -177,7 +180,8 @@ public class DatasetDAOImplTest {
                 .setRevisionNotes("")
                 .setRevisionReason("")
                 .setDataResource("")
-                .setJsonMetadata("");
+                .setJsonMetadata("")
+                .setTitle(TITLE);
 
         List<NamedParam> expectedParams = new NamedParam.ListBuilder()
                 .addParam(JSON_METADATA_FIELD, "")
@@ -188,6 +192,7 @@ public class DatasetDAOImplTest {
                 .addParam(REVISION_REASON_FIELD, "")
                 .addParam(DATA_RESOURCE_FIELD, "")
                 .addParam(DATASET_ID_FIELD, datasetId)
+                .addParam(TITLE_FIELD, TITLE)
                 .toList();
 
         dao.createOrUpdate(metadata);
@@ -212,7 +217,8 @@ public class DatasetDAOImplTest {
                 .setRevisionNotes("")
                 .setRevisionReason("")
                 .setDataResource("")
-                .setJsonMetadata("");
+                .setJsonMetadata("")
+                .setTitle(TITLE);
 
         List<NamedParam> expectedParams = new NamedParam.ListBuilder()
                 .addParam(JSON_METADATA_FIELD, "")
@@ -223,6 +229,7 @@ public class DatasetDAOImplTest {
                 .addParam(REVISION_REASON_FIELD, "")
                 .addParam(DATA_RESOURCE_FIELD, "")
                 .addParam(DATASET_ID_FIELD, datasetId)
+                .addParam(TITLE_FIELD, TITLE)
                 .toList();
 
 
