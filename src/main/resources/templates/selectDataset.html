@@ -39,12 +39,33 @@
 
             <h3 th:if="${#lists.isEmpty(datasets)}" th:text="#{no.datasets}"/>
 
-            <ul  th:if="${!#lists.isEmpty(datasets)}">
+            <ul th:if="${!#lists.isEmpty(datasets)}">
                 <li th:each="dataset : ${datasets}" th:value="${dataset.datasetId}">
-                    <a th:href="'/metadata/' + ${dataset.datasetId}" th:text="${dataset.datasetId}"></a>
+                    <div>
+                        <strong><span th:text="#{'dataset.id.field.label'}"></span></strong>
+                        <a th:href="'/metadata/' + ${dataset.datasetId}" th:text="${dataset.datasetId}"></a>
+                    </div>
+                    <div>
+                        <strong><span th:text="#{'dataset.resource.field.label'} + ':'"></span></strong>
+                        <a th:href="'/dataResource/' + ${dataset.dataResource}" th:text="${dataset.dataResource}"></a>
+                    </div>
+                    <div>
+                        <strong><span th:text="#{'dataset.title.field.label'}"></span></strong>
+                        <span th:text="${dataset.title}"></span>
+                    </div>
+                    <div>
+                        <strong><span th:text="#{'major.label.field.label'} + ':'"></span></strong>
+                        <span th:text="${dataset.majorLabel}"></span>
+                    </div>
+                    <div>
+                        <strong><span th:text="#{'major.version.field.label'}"></span></strong>
+                        <span th:text="${dataset.majorVersion}"></span>
+                    </div>
+                    <div>
+                        <strong><span th:text="#{'minor.version.field.label'}"></span></strong>
+                        <span th:text="${dataset.minorVersion}"></span></div>
                 </li>
             </ul>
-
 
         </div>
     </div>

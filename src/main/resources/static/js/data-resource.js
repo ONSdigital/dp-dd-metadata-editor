@@ -62,4 +62,9 @@ function showSuccess(data, textStatus, jqXHR) {
     $("#changes-successful").show();
     $("#errors").hide();
     $("#errors").empty();
+
+    $("#data-resource-id").prop("disabled", true);
+    $("#title").prop("disabled", true);
+    $("#metadata-json").prop("disabled", true);
+    $("#create-data-resource").hide();
 }

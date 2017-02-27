@@ -67,7 +67,9 @@ public class MetadataAPITest extends AbstractAPITest {
                 .setJsonMetadata("")
                 .setMajorVersion(1)
                 .setMajorLabel("2017")
-                .setMinorVersion(0);
+                .setMinorVersion(0)
+                .setTitle("Hello World!");
+
     }
 
     @Test

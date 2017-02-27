@@ -68,6 +68,8 @@ public class DatasetDAOImpl implements DatasetDAO {
 
     static final String DATA_RESOURCE_FIELD = "data_resource";
 
+    static final String TITLE_FIELD = "title";
+
     /**
      * Query for all DimensionalDataSet IDs.
      */
@@ -77,7 +79,7 @@ public class DatasetDAOImpl implements DatasetDAO {
      * Query for a DimensionalDataSet by its ID.
      */
     static final String DATASET_BY_ID_QUERY = "SELECT dimensional_data_set_id, metadata, major_version, major_label," +
-            " minor_version, revision_notes, revision_reason, data_resource FROM dimensional_data_set WHERE" +
+            " minor_version, revision_notes, revision_reason, data_resource, title FROM dimensional_data_set WHERE" +
             " dimensional_data_set_id = :dimensional_data_set_id";
 
     /**
@@ -85,10 +87,10 @@ public class DatasetDAOImpl implements DatasetDAO {
      */
     static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set SET metadata = :metadata,  " +
             "major_version = :major_version, major_label = :major_label, minor_version = :minor_version, " +
-            "revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource " +
-            "WHERE dimensional_data_set_id = :dimensional_data_set_id";
+            "revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource, " +
+            "title = :title WHERE dimensional_data_set_id = :dimensional_data_set_id";
 
-    static final String QUERY_FOR_ALL = "SELECT * FROM dimensional_data_set";
+    static final String QUERY_FOR_ALL = "SELECT * FROM dimensional_data_set dds ORDER BY dds.major_version DESC, dds.minor_version DESC";
 
     private static String getStr(ResultSet rs, String key) throws SQLException {
         return isNotEmpty(rs.getString(key)) ? rs.getString(key) : "";
@@ -101,19 +103,8 @@ public class DatasetDAOImpl implements DatasetDAO {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    /**
-     * {@link RowMapper} implementation for extracting data row data into {@link DatasetMetadata}.
-     */
-    private RowMapper<DatasetMetadata> metadataRowMapper = (rs, i) ->
-            new DatasetMetadata()
-                    .setJsonMetadata(getStr(rs, JSON_METADATA_FIELD))
-                    .setMajorVersion(getInt(rs, MAJOR_VERSION_FIELD))
-                    .setMajorLabel(getStr(rs, MAJOR_LABEL_FIELD))
-                    .setMinorVersion(getInt(rs, MINOR_VERSION_FIELD))
-                    .setRevisionNotes(getStr(rs, REVISION_NOTES_FIELD))
-                    .setRevisionReason(getStr(rs, REVISION_REASON_FIELD))
-                    .setDataResource(getStr(rs, DATA_RESOURCE_FIELD))
-                    .setDatasetId(getStr(rs, DATASET_ID_FIELD));
+    @Autowired
+    private RowMapper<DatasetMetadata> metadataRowMapper;
 
 
     // Function encapsulates the creation of the MapSqlParameterSource. Can be easily be swapped for mock in test.
@@ -163,6 +154,7 @@ public class DatasetDAOImpl implements DatasetDAO {
                     .setRevisionReason(getStr(rs, REVISION_REASON_FIELD))
                     .setDataResource(getStr(rs, DATA_RESOURCE_FIELD))
                     .setDatasetId(getStr(rs, DATASET_ID_FIELD))
+                    .setTitle(getStr(rs, TITLE_FIELD))
             );
         });
         return datasetMetadatas;
@@ -181,6 +173,7 @@ public class DatasetDAOImpl implements DatasetDAO {
                             .addParam(REVISION_REASON_FIELD, form.getRevisionReason())
                             .addParam(DATA_RESOURCE_FIELD, form.getDataResource())
                             .addParam(DATASET_ID_FIELD, UUID.fromString(form.getDatasetId()))
+                            .addParam(TITLE_FIELD, form.getTitle())
                             .toList()
             );
 

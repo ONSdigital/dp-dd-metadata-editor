@@ -18,12 +18,13 @@
     -X PUT \
     -d '{
       "jsonMetadata": "{\"Name\":\"Dataset Metadata Test 1\", \"uploadDate\":\"01/01/2017\"}",
-      "datasetId": "1c85f3f1-054e-4a77-a01b-bb00058f94e5",
-      "dataResource": "ABC123",
+      "datasetId": "773cbeed-cc51-4935-aec8-4514f2a8f0f3",
+      "dataResource": "123456789",
       "majorVersion": 2,
       "majorLabel": "2016",
       "minorVersion": 1,
       "revisionNotes": "N/a",
-      "revisionReason": "Initial update."
+      "revisionReason": "Initial update.",
+      "title": "Dataset Title"
     }' \
-    http://localhost:23000/metadata/1c85f3f1-054e-4a77-a01b-bb00058f94e5
+    http://localhost:23000/metadata/773cbeed-cc51-4935-aec8-4514f2a8f0f3
