@@ -64,7 +64,7 @@ public class DatasetDAOImpl implements DatasetDAO {
     /**
      * Dimensional Dataset ID column name.
      */
-    static final String DATASET_ID_FIELD = "dimensional_data_set_id";
+    static final String DATASET_ID_FIELD = "id";
 
     static final String DATA_RESOURCE_FIELD = "data_resource";
 
@@ -73,24 +73,24 @@ public class DatasetDAOImpl implements DatasetDAO {
     /**
      * Query for all DimensionalDataSet IDs.
      */
-    static final String DATASET_IDS_QUERY = "SELECT dimensional_data_set_id FROM dimensional_data_set";
+    static final String DATASET_IDS_QUERY = "SELECT id FROM data_set";
 
     /**
      * Query for a DimensionalDataSet by its ID.
      */
-    static final String DATASET_BY_ID_QUERY = "SELECT dimensional_data_set_id, metadata, major_version, major_label," +
-            " minor_version, revision_notes, revision_reason, data_resource, title FROM dimensional_data_set WHERE" +
-            " dimensional_data_set_id = :dimensional_data_set_id";
+    static final String DATASET_BY_ID_QUERY = "SELECT id, metadata, major_version, major_label," +
+            " minor_version, revision_notes, revision_reason, data_resource, title FROM data_set WHERE" +
+            " id = :id";
 
     /**
      * Update statement for persisting new/updating metadata.
      */
-    static final String UPDATE_METADATA_QUERY = "UPDATE dimensional_data_set SET metadata = :metadata,  " +
+    static final String UPDATE_METADATA_QUERY = "UPDATE data_set SET metadata = :metadata,  " +
             "major_version = :major_version, major_label = :major_label, minor_version = :minor_version, " +
             "revision_notes = :revision_notes, revision_reason = :revision_reason, data_resource = :data_resource, " +
-            "title = :title WHERE dimensional_data_set_id = :dimensional_data_set_id";
+            "title = :title WHERE id = :id";
 
-    static final String QUERY_FOR_ALL = "SELECT * FROM dimensional_data_set dds ORDER BY dds.major_version DESC, dds.minor_version DESC";
+    static final String QUERY_FOR_ALL = "SELECT * FROM data_set dds ORDER BY dds.major_version DESC, dds.minor_version DESC";
 
     private static String getStr(ResultSet rs, String key) throws SQLException {
         return isNotEmpty(rs.getString(key)) ? rs.getString(key) : "";
