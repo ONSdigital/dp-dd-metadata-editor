@@ -210,7 +210,7 @@ public class DataResourceAPITest extends AbstractAPITest {
     }
 
     @Test
-    public void updateShouldReturnValidationErrorResponseIfInvalid() throws Exception {
+    public void updateShouldReturnValidationErrorResponseIfEmpty() throws Exception {
         // PUT an invalid DataResource object.
         mvcResult = mvc.perform(put("/dataResource/" + DATA_RESOURCE_ID)
                 .content(objectMapper.writeValueAsString(dataResource.setDataResourceID("")))
@@ -224,6 +224,25 @@ public class DataResourceAPITest extends AbstractAPITest {
         ValidationErrorsResponse expected = new ValidationErrorsResponse(errors);
 
         assertThat(expected, equalTo(parseJSON(mvcResult, ValidationErrorsResponse.class)));
+        verifyZeroInteractions(mockDataResourceDAO);
+    }
+
+    @Test
+    public void updateShouldReturnValidationErrorResponseIfInvalid() throws Exception {
+        // PUT an invalid DataResource object.
+        mvcResult = mvc.perform(put("/dataResource/" + DATA_RESOURCE_ID)
+                .content(objectMapper.writeValueAsString(dataResource.setDataResourceID("invalid:£")))
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        List<ValidationError> errors = new ArrayList<>();
+        errors.add(new ValidationError("data.resource.data.resource.id.regex", "Data Resource ID must include only letters, numbers, full stop (.), underscore(_) and hyphen (-)"));
+        ValidationErrorsResponse expected = new ValidationErrorsResponse(errors);
+
+        ValidationErrorsResponse actual = parseJSON(mvcResult, ValidationErrorsResponse.class);
+        assertThat(actual, equalTo(expected));
         verifyZeroInteractions(mockDataResourceDAO);
     }
 

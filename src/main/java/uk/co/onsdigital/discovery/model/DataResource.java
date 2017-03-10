@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import uk.co.onsdigital.discovery.validation.annotation.JSON;
 
+import javax.validation.constraints.Pattern;
+
 public class DataResource {
 
     public static final String DATA_RESOURCE_COL_NAME = "data_resource";
@@ -14,6 +16,7 @@ public class DataResource {
     public static final String METADATA_COL_NAME = "metadata";
 
     @NotEmpty(message = "data.resource.data.resource.id.empty")
+    @Pattern(regexp = "[a-zA-Z0-9_\\-.]*", message = "data.resource.data.resource.id.regex")
     private String dataResourceID;
 
     @Length(min = 3, message = "data.resource.title.min.length")

@@ -9,6 +9,7 @@ import uk.co.onsdigital.discovery.validation.annotation.JSON;
 import uk.co.onsdigital.discovery.validation.annotation.UUID;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * Model representing the Metadata fields of the DinmensionalDataSet table.
@@ -29,6 +30,7 @@ public class DatasetMetadata {
     private Integer majorVersion;
 
     @NotEmpty(message = "dataset.major.label.empty")
+    @Pattern(regexp = "[a-zA-Z0-9_\\-.]*", message = "dataset.major.label.regex")
     private String majorLabel;
 
     @NotNull(message = "dataset.minor.version.empty")
