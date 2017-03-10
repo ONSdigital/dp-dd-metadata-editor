@@ -111,16 +111,12 @@ public class MetadataAPI extends AbstractBaseAPI {
     }
 
     private String toCamelCase(String input) throws UnexpectedErrorException {
-        try {
-            if (StringUtils.isEmpty(input)) return input;
+        if (StringUtils.isEmpty(input)) return input;
 
-            StringBuilder camelCase = new StringBuilder();
-            for (String word : input.trim().split(" ")) {
-                camelCase.append(URLEncoder.encode(capitalize(word.toLowerCase()), "UTF-8"));
-            }
-            return camelCase.toString();
-        } catch (UnsupportedEncodingException e) {
-            throw new UnexpectedErrorException(UNEXPECTED_ERROR);
+        StringBuilder camelCase = new StringBuilder();
+        for (String word : input.trim().split(" ")) {
+            camelCase.append(capitalize(word.toLowerCase()));
         }
+        return camelCase.toString();
     }
 }
