@@ -99,7 +99,7 @@ public class MetadataAPI extends AbstractBaseAPI {
             metadata.setJsonMetadata(minifyJSONString(metadata.getJsonMetadata()));
         }
         if (isNotEmpty(metadata.getMajorLabel())) {
-            metadata.setMajorLabel(toCamelCase(metadata.getMajorLabel()));
+            metadata.setMajorLabel(metadata.getMajorLabel());
         }
         if (isNotEmpty(metadata.getRevisionNotes())) {
             metadata.setRevisionNotes(trim(metadata.getRevisionNotes()));
@@ -110,13 +110,4 @@ public class MetadataAPI extends AbstractBaseAPI {
         return metadata;
     }
 
-    private String toCamelCase(String input) throws UnexpectedErrorException {
-        if (StringUtils.isEmpty(input)) return input;
-
-        StringBuilder camelCase = new StringBuilder();
-        for (String word : input.trim().split(" ")) {
-            camelCase.append(capitalize(word.toLowerCase()));
-        }
-        return camelCase.toString();
-    }
 }
