@@ -30,7 +30,7 @@ public class DatasetMetadata {
     private Integer majorVersion;
 
     @NotEmpty(message = "dataset.major.label.empty")
-    @Pattern(regexp = "[a-zA-Z0-9_\\-.]*", message = "dataset.major.label.regex")
+    @Pattern(regexp = "[a-zA-Z0-9_\\-]*", message = "dataset.major.label.regex")
     private String majorLabel;
 
     @NotNull(message = "dataset.minor.version.empty")

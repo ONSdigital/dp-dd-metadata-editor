@@ -238,7 +238,7 @@ public class DataResourceAPITest extends AbstractAPITest {
                 .andReturn();
 
         List<ValidationError> errors = new ArrayList<>();
-        errors.add(new ValidationError("data.resource.data.resource.id.regex", "Data Resource ID must include only letters, numbers, full stop (.), underscore(_) and hyphen (-)"));
+        errors.add(new ValidationError("data.resource.data.resource.id.regex", "Data Resource ID must include only letters, numbers, underscore(_) and hyphen (-)"));
         ValidationErrorsResponse expected = new ValidationErrorsResponse(errors);
 
         ValidationErrorsResponse actual = parseJSON(mvcResult, ValidationErrorsResponse.class);

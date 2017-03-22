@@ -16,7 +16,7 @@ public class DataResource {
     public static final String METADATA_COL_NAME = "metadata";
 
     @NotEmpty(message = "data.resource.data.resource.id.empty")
-    @Pattern(regexp = "[a-zA-Z0-9_\\-.]*", message = "data.resource.data.resource.id.regex")
+    @Pattern(regexp = "[a-zA-Z0-9_\\-]*", message = "data.resource.data.resource.id.regex")
     private String dataResourceID;
 
     @Length(min = 3, message = "data.resource.title.min.length")
